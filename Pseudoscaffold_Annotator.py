@@ -3,6 +3,7 @@
 import argparse
 import subprocess
 import sys
+import os
 import re
 
 Arguments = argparse.ArgumentParser(add_help=True)
@@ -22,6 +23,7 @@ Arguments.add_argument('-a',
 
 Arguments.add_argument('-p',
     '--pseudoscaffold',
+    type=str,
     default=None,
     metavar='PSEUDOSCAFFOLD FASTA',
     help="Pseudoscaffold to be annotated")
@@ -32,6 +34,13 @@ args = Arguments.parse_args()
 def Usage():
     print'''Usage: Pseudoscaffold_Annotator.py -r | --reference <reference fasta> -a | --annotation <reference annotation file> -p | --pseudoscaffold <assembled pseudoscaffold fasta>'''
     return
+
+
+def opener(annotations, references, pseudoscaffolds):
+    annotation = open(annotations).read()
+    reference = open(references).read()
+    pseudoscaffold = open(psuedoscaffolds).read()
+    return(annotation, reference, pseudoscaffold)
 
 
 def reference_extracter():
@@ -46,20 +55,19 @@ def sequence_extracter(out):
     extraction = open(out)
     reader = extraction.read()
     sequence = re.compile(ur'([ACTG]+)')
-    extracter = re.findall(sequence, reader)
-    return(extracter)
+    contig = re.compile(ur'(^>[a-zA-Z0-9_]+)', re.MULTILINE)
+    extracter = sequence.findall(reader)
+    contig_ID = contig.findall(reader)
+    extraction.close()
+    return(extracter, contig_ID)
 
 
-def sequence_matcher(pseudoscaffold, nucleotides):
-    #target = BedTool(pseudoscaffold)
-    #reader = target.read()
-    #sequence = re.compile(nucleotides, re.M)
-    #nucl = sequence.search(reader)
-    #nucl = sequence.findall(reader)
-    #return nucl.groups
-    for captured in nucleotides:
-        print captured
-
+def gff3_field_finder(pseudoscaffold, extraction, annotation, reference):
+    pseudo_ID = list()
+    for captured in extraction:
+        sequence_find = re.compile(ur'(^>[0-9a-z_\s]+)(?=\s.*%s)'%(captured), re.MULTILINE | re.DOTALL)
+        ID = sequence_find.search(pseudo_reader)
+        print ID.groups()
 
 
 def main():
@@ -67,8 +75,10 @@ def main():
         Usage()
         exit(1)
     else:
+        annotation, reference, pseudoscaffold = opener(args.annotation, args.reference, args.pseudoscaffold)
         out, err, outfile = reference_extracter()
-        extraction = sequence_extracter(outfile)
-        sequence_matcher(args.pseudoscaffold, extraction)
+        extraction, contig_ID = sequence_extracter(outfile)
+        gff3_field_finder()
+
 
 main()
