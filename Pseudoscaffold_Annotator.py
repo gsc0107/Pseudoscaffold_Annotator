@@ -68,6 +68,18 @@ file that reads like:
     return
 
 
+def sequence_extracter():
+    tmp = 'sequence.fasta'
+    extraction_cmd = ['bash', './extraction.sh', args.reference, args.annotation, tmp]
+    extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = extraction_shell.communicate()
+    seq_list = open(tmp).read()
+    sequence = re.compile(ur'([ACTGN]+)')
+    extracter = sequence.findall(seq_list)
+    #os.remove(tmp)
+    return(extracter)
+
+
 def opener(annotation, reference, pseudoscaffold):
     annotations = open(annotation).read()
     references = open(reference).read()
@@ -79,14 +91,13 @@ def opener(annotation, reference, pseudoscaffold):
 def contig_finder(reference, annotation, extracted_sequence, pseudoscaffold):
     contig = re.compile(ur'(^[a-zA-Z0-9_]+)', re.MULTILINE)
     contig_original = list()
-    contig_adjusted = list()
     extracted_contig = contig.findall(annotation)
+    length_checker = len(extracted_contig)
     for entry in extracted_contig:
         if not entry in contig_original:
             contig_original.append(entry)
         else:
             pass
-    length_checker = len(extracted_contig)
     print("Original contigs found")
     contig_pseudo = list()
     for captured in extracted_sequence:
@@ -98,18 +109,6 @@ def contig_finder(reference, annotation, extracted_sequence, pseudoscaffold):
         return(contig_original, length_checker, contig_pseudo)
     else:
         sys.exit("Failed to find all pseudoscaffold contigs")
-
-
-def sequence_extracter():
-    tmp = 'sequence.fasta'
-    extraction_cmd = ['bash', './extraction.sh', args.reference, args.annotation, tmp]
-    extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = extraction_shell.communicate()
-    seq_list = open(tmp).read()
-    sequence = re.compile(ur'([ACTGN]+)')
-    extracter = sequence.findall(seq_list)
-    os.remove(tmp)
-    return(extracter)
 
 
 def source_finder(contig_original, annotation, length_checker):
