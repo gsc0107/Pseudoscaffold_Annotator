@@ -69,7 +69,7 @@ file that reads like:
 
 
 def sequence_extracter():
-    tmp = 'sequence.fasta'
+    tmp = 'pseudoscaffold_annotator_temp.fasta'
     extraction_cmd = ['bash', './extraction.sh', args.reference, args.annotation, tmp]
     extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = extraction_shell.communicate()
