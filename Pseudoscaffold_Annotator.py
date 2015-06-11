@@ -70,13 +70,15 @@ file that reads like:
 
 def sequence_extracter():
     tmp = 'pseudoscaffold_annotator_temp.fasta'
-    extraction_cmd = ['bash', './extraction.sh', args.reference, args.annotation, tmp]
+    print("Searching for original sequences using 'extraction.sh'")
+    extraction_cmd = ['bash', './Shell_Scripts/extraction.sh', args.reference, args.annotation, tmp]
     extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = extraction_shell.communicate()
     seq_list = open(tmp).read()
     sequence = re.compile(ur'([ACTGN]+)')
     extracter = sequence.findall(seq_list)
     #os.remove(tmp)
+    print("Found sequences")
     return(extracter)
 
 
@@ -88,7 +90,7 @@ def opener(annotation, reference, pseudoscaffold):
     return(annotations, references, pseudoscaffolds)
 
 
-def contig_finder(reference, annotation, extracted_sequence, pseudoscaffold):
+def contig_extracter(reference, annotation):
     contig = re.compile(ur'(^[a-zA-Z0-9_]+)', re.MULTILINE)
     contig_original = list()
     extracted_contig = contig.findall(annotation)
@@ -99,14 +101,18 @@ def contig_finder(reference, annotation, extracted_sequence, pseudoscaffold):
         else:
             pass
     print("Original contigs found")
+    return(contig_original, length_checker)
+
+
+def contig_finder(extracted_sequence, length_checker, pseudoscaffold)
     contig_pseudo = list()
     for captured in extracted_sequence:
         sequence_find = re.compile(ur'(^>[0-9a-z_\s]+)(?=\s.*%s)'%(captured), re.MULTILINE | re.DOTALL)
         ID = sequence_find.search(pseudoscaffold)
-        contig_pseudo.append(ID.groups())
+        contig_pseudo.append(ID.group())
     if len(contig_pseudo) == length_checker:
         print("Pseudoscaffold contigs found")
-        return(contig_original, length_checker, contig_pseudo)
+        return(contig_pseudo)
     else:
         sys.exit("Failed to find all pseudoscaffold contigs")
 
@@ -236,14 +242,18 @@ def main():
     else:
         extracted_sequence = sequence_extracter()
         annotation, reference, pseudoscaffold = opener(args.annotation, args.reference, args.pseudoscaffold)
-        contig_original, length_checker, contig_pseudo = contig_finder(reference, annotation, extracted_sequence, pseudoscaffold)
-        start, end = length_calculator(pseudoscaffold, extracted_sequence, length_checker)
-        source = source_finder(contig_original, annotation, length_checker)
-        types = type_finder(contig_original, annotation, length_checker)
-        score = score_finder(contig_original, annotation, length_checker)
-        strand = strandedness(contig_original, annotation, length_checker)
-        phase = phase_finder(contig_original, annotation, length_checker)
-        attributes = attribute_finder(contig_original, annotation, length_checker)
-        gff3_builder(args.outfile, contig_pseudo, source, types, start, end, score, strand, phase, attributes, length_checker)
+        contig_original, length_checker = contig_finder(reference, annotation)
+        contig_pseudo = contig_finder(extracted_sequence, length_checker, pseudoscaffold)
+        #start, end = length_calculator(pseudoscaffold, extracted_sequence, length_checker)
+        #source = source_finder(contig_original, annotation, length_checker)
+        #types = type_finder(contig_original, annotation, length_checker)
+        #score = score_finder(contig_original, annotation, length_checker)
+        #strand = strandedness(contig_original, annotation, length_checker)
+        #phase = phase_finder(contig_original, annotation, length_checker)
+        #attributes = attribute_finder(contig_original, annotation, length_checker)
+        #gff3_builder(args.outfile, contig_pseudo, source, types, start, end, score, strand, phase, attributes, length_checker)
+        print contig_original
+        print contig_pseudo
+        print length_checker
 
 main()
