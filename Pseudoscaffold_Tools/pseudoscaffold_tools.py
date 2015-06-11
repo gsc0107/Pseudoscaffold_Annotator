@@ -18,7 +18,7 @@ def sequence_extracter():
 
 
 #       Find the pseudoscaffold ID where the sequences are stored
-def contig_finder(extracted_sequence, length_checker, pseudoscaffold)
+def contig_finder(extracted_sequence, length_checker, pseudoscaffold):
     contig_pseudo = list()
     for captured in extracted_sequence:
         sequence_find = re.compile(ur'(^>[0-9a-z_\s]+)(?=\s.*%s)'%(captured), re.MULTILINE | re.DOTALL)

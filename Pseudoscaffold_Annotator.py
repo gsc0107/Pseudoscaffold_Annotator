@@ -71,7 +71,8 @@ file that reads like:
 def sequence_extracter():
     tmp = 'pseudoscaffold_annotator_temp.fasta'
     print("Searching for original sequences using 'extraction.sh'")
-    extraction_cmd = ['bash', './Shell_Scripts/extraction.sh', args.reference, args.annotation, tmp]
+#    extraction_cmd = ['bash', './Shell_Scripts/extraction.sh', args.reference, args.annotation, tmp]
+    extraction_cmd = ['bash', './extraction.sh', args.reference, args.annotation, tmp]
     extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = extraction_shell.communicate()
     seq_list = open(tmp).read()
@@ -104,7 +105,7 @@ def contig_extracter(reference, annotation):
     return(contig_original, length_checker)
 
 
-def contig_finder(extracted_sequence, length_checker, pseudoscaffold)
+def contig_finder(extracted_sequence, length_checker, pseudoscaffold):
     contig_pseudo = list()
     for captured in extracted_sequence:
         sequence_find = re.compile(ur'(^>[0-9a-z_\s]+)(?=\s.*%s)'%(captured), re.MULTILINE | re.DOTALL)
