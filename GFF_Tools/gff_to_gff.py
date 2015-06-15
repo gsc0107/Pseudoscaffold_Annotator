@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #   A script to build a GFF annotation with a reference GFF file
-
+import re
 import gff_extracter
 import Pseudoscaffold_Tools.pseudoscaffold_tools as pseudoscaffold_tools
 
@@ -39,7 +39,7 @@ def gff3_builder(outfile, contig_pseudo, source, types, start, end, score, stran
 
 
 def gff_to_gff(lock, unique, extracted_sequence, reference, annotation, pseudoscaffold, outfile):
-    lock.acquire()
+#    lock.acquire()
     length_checker = find_length(unique, annotation)
     sources = gff_extracter.source_finder(unique, annotation, length_checker)
     types = gff_extracter.type_finder(unique, annotation, length_checker)
@@ -50,4 +50,4 @@ def gff_to_gff(lock, unique, extracted_sequence, reference, annotation, pseudosc
     contig_pseudo = pseudoscaffold_tools.contig_finder(extracted_sequence, length_checker, pseudoscaffold)
     start, end = pseudoscaffold_tools.length_gff(extracted_sequence, length_checker, pseudoscaffold)
     gff3_builder(outfile, contig_pseudo, sources, types, start, end, scores, strands, phases, attributes, length_checker)
-    lock.release()
+#    lock.release()
