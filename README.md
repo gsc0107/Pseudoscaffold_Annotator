@@ -14,6 +14,7 @@ The BEDTools Suite is also required. It can be downloaded from GitHub.
 ## TODO
 
  - Add support for extracting information from BED file
+ - Add parallelization support
  - Add BED to GFF annotating capabilities
  - Add GFF to BED annotating capabilities
  - Finish GFF to GFF annotation capabilities
