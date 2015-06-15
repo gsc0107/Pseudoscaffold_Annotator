@@ -32,7 +32,7 @@ def gff3_builder(outfile, contig_pseudo, source, types, start, end, score, stran
 
 
 def gff_to_gff(lock, unique, extracted_sequence, reference, annotation, pseudoscaffold, outfile):
-    lock.acquire
+    lock.acquire()
     sources = gff_extracter.source_finder(unique, annotation, length_checker)
     types = gff_extracter.type_finder(unique, annotation, length_checker)
     scores = gff_extracter.score_finder(unique, annotation, length_checker)

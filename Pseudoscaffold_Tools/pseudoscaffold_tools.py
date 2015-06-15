@@ -6,7 +6,6 @@ import re
 import sys
 
 #      Extract the sequences defined by the original annotation file
-#       NOT NEEDED
 def sequence_extracter(reference, annotation):
     tmp = 'pseudoscaffold_annotator_temp.fasta'
     print("Searching for original sequences using 'extraction.sh'")
