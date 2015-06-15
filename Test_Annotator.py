@@ -115,8 +115,9 @@ def pseudoscaffold_annotator():
             for unique in contig_original:
                 out=str(unique+"_out.gff")
                 print out
-                Process(target=gff_to_gff.gff_to_gff, args=(lock, unique, extracted_sequence, reference, annotation, pseudoscaffold, out))
+                Process(target=gff_to_gff.gff_to_gff, args=(lock, unique, extracted_sequence, reference, annotation, pseudoscaffold, out)).start()
     elif find_gff and create_bed:
+        print "Found GFF file, making BED file"
         import GFF_Tools.gff_to_bed as gff_to_bed
         import GFF_Tools.gff_extracter as gff_extracter
         contig_original, length_checker = gff_extracter.contig_extracter(reference, annotation)
@@ -127,9 +128,11 @@ def pseudoscaffold_annotator():
                 pass
         pass
     elif find_bed and create_gff:
+        print "Found BED file, making GFF file"
         import BED_Tools.bed_to_gff as bed_to_gff
         pass
     elif find_bed and create_bed:
+        print "Found BED file, making BEd file"
         import BED_Tools.bed_to_bed as bed_to_bed
         pass
     else:
