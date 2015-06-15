@@ -6,6 +6,13 @@ import gff_extracter
 import Pseudoscaffold_Tools.pseudoscaffold_tools as pseudoscaffold_tools
 
 
+def find_length(unique, annotation):
+    contig = re.compile(ur'(%s)'%(unique))
+    length = contig.findall(annotation)
+    length_checker = len(length)
+    print length_checker
+    return(length_checker)
+
 def gff3_builder(outfile, contig_pseudo, source, types, start, end, score, strand, phase, attributes, length_checker):
     gff= open(outfile, 'w')
     for i in range(0, length_checker):
@@ -33,6 +40,7 @@ def gff3_builder(outfile, contig_pseudo, source, types, start, end, score, stran
 
 def gff_to_gff(lock, unique, extracted_sequence, reference, annotation, pseudoscaffold, outfile):
     lock.acquire()
+    length_checker = find_length(unique, annotation)
     sources = gff_extracter.source_finder(unique, annotation, length_checker)
     types = gff_extracter.type_finder(unique, annotation, length_checker)
     scores = gff_extracter.score_finder(unique, annotation, length_checker)
