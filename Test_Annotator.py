@@ -112,7 +112,7 @@ def pseudoscaffold_annotator():
         if __name__ == '__main__':
             lock = Lock()
             for unique in contig_original:
-                out=str(contig_original+"_out.gff")
+                out=str(unique+"_out.gff")
                 Process(target=gff_to_gff.gff_to_gff, args=(lock, unique, extracted_sequence, reference, annotation, pseudoscaffold, out))
     elif find_gff and create_bed:
         import GFF_Tools.gff_to_bed as gff_to_bed
@@ -121,7 +121,7 @@ def pseudoscaffold_annotator():
         if __name__ == '__main__':
             lock = Lock()
             for unique in contig_original:
-                out = str(contig_original+"_out.bed")
+                out = str(unique+"_out.bed")
                 pass
         pass
     elif find_bed and create_gff:
