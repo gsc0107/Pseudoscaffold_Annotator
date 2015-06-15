@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 
 #   A script to find information from the pseudoscaffold being annotated
+import subprocess
+import re
+import sys
 
 #      Extract the sequences defined by the original annotation file
-def sequence_extracter():
+#       NOT NEEDED
+def sequence_extracter(reference, annotation):
     tmp = 'pseudoscaffold_annotator_temp.fasta'
     print("Searching for original sequences using 'extraction.sh'")
-    extraction_cmd = ['bash', './extraction.sh', args.reference, args.annotation, tmp]
+    extraction_cmd = ['bash', './Shell_Scripts/extraction.sh', reference, annotation, tmp]
     extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = extraction_shell.communicate()
     seq_list = open(tmp).read()
@@ -32,7 +36,7 @@ def contig_finder(extracted_sequence, length_checker, pseudoscaffold):
 
 
 #       Calculate start and end positions within the pseudoscaffold for a GFF file
-def length_gff(pseudoscaffold, extracted_sequence, length_checker):
+def length_gff(extracted_sequence, length_checker, pseudoscaffold):
     start = list()
     end = list()
     for extract in extracted_sequence:
@@ -48,5 +52,5 @@ def length_gff(pseudoscaffold, extracted_sequence, length_checker):
 
 
 #       Calculate start and end posiotns within the pseudoscaffold for a BED file
-def length_bed(pseudoscaffold, extracted_sequence, length_checker):
+def length_bed(extracted_sequence, length_checker, pseudoscaffold):
     pass

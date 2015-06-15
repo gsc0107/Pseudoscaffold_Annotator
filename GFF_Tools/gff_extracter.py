@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 #   A script to hold functions for finding fields in a GFF file
+import re
+import sys
 
 #       Find the seqid (column 1) from the GFF file
 def contig_extracter(reference, annotation):
@@ -18,12 +20,9 @@ def contig_extracter(reference, annotation):
 
 
 #       Find the source (column 2) from the GFF file
-def source_finder(contig_original, annotation, length_checker):
-    sources = list()
-    for unique in contig_original:
-        source_searcher = re.compile(ur'(?<=%s)\s+([a-zA-Z0-9]*)'%(unique))
-        sourcer = source_searcher.findall(annotation)
-        sources = sources + sourcer
+def source_finder(unique, annotation, length_checker):
+    source_searcher = re.compile(ur'(?<=%s)\s+([a-zA-Z0-9]*)'%(unique))
+    sources = source_searcher.findall(annotation)
     if len(sources) == length_checker:
         print("All 'source' fields found")
         return(sources)
@@ -32,12 +31,9 @@ def source_finder(contig_original, annotation, length_checker):
 
 
 #       Find the type (column 3) from the GFF file
-def type_finder(contig_original, annotation, length_checker):
-    types = list()
-    for unique in contig_original:
-        type_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+([a-zA-Z0-9_]*)'%(unique))
-        typer = type_searcher.findall(annotation)
-        types = types + typer
+def type_finder(unique, annotation, length_checker):
+    type_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+([a-zA-Z0-9_]*)'%(unique))
+    types = type_searcher.findall(annotation)
     if len(types) == length_checker:
         print("All 'type' fields found")
         return(types)
@@ -46,12 +42,9 @@ def type_finder(contig_original, annotation, length_checker):
 
 
 #       Find the score (column 6) from the GFF file
-def score_finder(contig_original, annotation, length_checker):
-    scores = list()
-    for unique in contig_original:
-        score_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+([a-zA-Z0-9\._\-])'%(unique))
-        scorer = score_searcher.findall(annotation)
-        scores = scores + scorer
+def score_finder(unique, annotation, length_checker):
+    score_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+([a-zA-Z0-9\._\-])'%(unique))
+    scores = score_searcher.findall(annotation)
     if len(scores) == length_checker:
         print("All 'score' fields found'")
         return(scores)
@@ -60,12 +53,9 @@ def score_finder(contig_original, annotation, length_checker):
 
 
 #       Find the strand information (column 7) from the GFF file
-def strandedness(contig_original, annotation, length_checker):
-    strands = list()
-    for unique in contig_original:
-        strand_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+([+\-\.])'%(unique))
-        strander = strand_searcher.findall(annotation)
-        strands = strands + strander
+def strandedness(unique, annotation, length_checker):
+    strand_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+([+\-\.])'%(unique))
+    strandes = strand_searcher.findall(annotation)
     if len(strands) == length_checker:
         print("All 'strand' information found")
         return(strands)
@@ -74,12 +64,9 @@ def strandedness(contig_original, annotation, length_checker):
 
 
 #       Find the phase (column 8) from the GFF file
-def phase_finder(contig_original, annotation, length_checker):
-    phases = list()
-    for unique in contig_original:
-        phase_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+[+\-\.]\s+([\.012])'%(unique))
-        phaser = phase_searcher.findall(annotation)
-        phases = phases + phaser
+def phase_finder(unique, annotation, length_checker):
+    phase_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+[+\-\.]\s+([\.012])'%(unique))
+    phases = phase_searcher.findall(annotation)
     if len(phases) == length_checker:
         print("All 'phase' information found")
         return(phases)
@@ -88,12 +75,9 @@ def phase_finder(contig_original, annotation, length_checker):
 
 
 #       Find any attributes (column 9) from the GFF file
-def attribute_finder(contig_original, annotation, length_checker):
-    attributes = list()
-    for unique in contig_original:
-        attribute_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+[+\-\.]\s+[\.012]\s+(.*)'%(unique))
-        attributer = attribute_searcher.findall(annotation)
-        attributes = attributes + attributer
+def attribute_finder(unique, annotation, length_checker):
+    attribute_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+[+\-\.]\s+[\.012]\s+(.*)'%(unique))
+    attributes = attribute_searcher.findall(annotation)
     if len(attributes) == length_checker:
         print("All attributes found")
         return(attributes)

@@ -1,50 +1,10 @@
 #!/usr/bin/env python
 
-import argparse
 import sys
 
-Arguments = argparse.ArgumentParser(add_help=True)
-Arguments.add_argument('-p',
-    '--pseudoscaffold',
-    type=str,
-    default=None,
-    metavar='ORIGINAL PSEUDOSCAFFOLD',
-    help="Original pseudoscaffold fasta file to be fixed")
-
-Arguments.add_argument('-o',
-    '--outfile',
-    type=str,
-    default='fixed_pseudoscaffold.fasta',
-    metavar='FIXED PSEUDOSCAFFOLD',
-    help="Desired name of fixed pseudoscaffold fasta file. Please put full file name, including extenstion. Default is 'fixed_pseudoscaffold.fasta'")
-
-args = Arguments.parse_args()
-
-
-def Usage():
-    print'''Usage: pseudoscaffold_fixer.py -p | --pseudoscaffold <original pseudoscaffold fasta file> -o | --outfile <name of fixed pseudoscaffold fasta file>
-
-pseudoscaffold_fixer.py assembles a new pseudoscaffold fasta
-file for use with Pseudoscaffold_Annotator.py
-
-Pseudoscaffold_Annotator.py requires no new lines
-within the sequence of the pseudoscaffold.
-The following is not an allowed sequence: 
-        >pseudoscaffold
-        ACTGTCAG
-        GCTATCGA
-
-pseudoscaffold_fixer.py removes new lines
-between sequence data, creating a fasta
-file that reads like:
-        >pseudoscaffold
-        ACTGTCAGGCTATCGA
-    '''
-
-
-def opener():
-    pseudo = open(args.pseudoscaffold).read()
-    fixed = open(args.outfile, 'w')
+def opener(pseudoscaffold, outfile):
+    pseudo = open(pseudoscaffold).read()
+    fixed = open(outfile, 'w')
     return(pseudo, fixed)
 
 
@@ -70,13 +30,7 @@ def pseudoscaffold_fixer(pseudo, pseudo_indecies, fixed):
     fixed.close()
 
 
-def main():
-    if not sys.argv[1:]:
-        Usage()
-        exit(1)
-    else:
-        pseudo, fixed = opener()
-        pseudo_indecies = contig_extracter(pseudo)
-        pseudoscaffold_fixer(pseudo, pseudo_indecies, fixed)
-
-main()
+def main(pseuodoscaffold, outfile):
+    pseudo, fixed = opener(pseuodoscaffold, outfile)
+    pseudo_indecies = contig_extracter(pseudo)
+    pseudoscaffold_fixer(pseudo, pseudo_indecies, fixed)
