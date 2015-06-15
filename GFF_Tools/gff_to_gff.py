@@ -2,8 +2,6 @@
 
 #   A script to build a GFF annotation with a reference GFF file
 
-from multiprocesing import Process
-
 import gff_extracter
 import Pseudoscaffold_Tools.pseudoscaffold_tools as pseudoscaffold_tools
 
