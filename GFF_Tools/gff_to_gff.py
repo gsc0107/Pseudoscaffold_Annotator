@@ -15,6 +15,7 @@ def find_length(unique, annotation):
 
 def gff3_builder(outfile, contig_pseudo, source, types, start, end, score, strand, phase, attributes, length_checker):
     gff= open(outfile, 'w')
+    print "opened " + outfile + " for writing"
     for i in range(0, length_checker):
         gff.write(str(contig_pseudo[i]))
         gff.write('\t')
@@ -38,7 +39,7 @@ def gff3_builder(outfile, contig_pseudo, source, types, start, end, score, stran
     print("GFF file created")
 
 
-def gff_to_gff(lock, unique, extracted_sequence, reference, annotation, pseudoscaffold, outfile):
+def gff_to_gff(lock, seq_list, unique, reference, annotation, pseudoscaffold, outfile):
 #    lock.acquire()
     length_checker = find_length(unique, annotation)
     sources = gff_extracter.source_finder(unique, annotation, length_checker)
@@ -47,6 +48,7 @@ def gff_to_gff(lock, unique, extracted_sequence, reference, annotation, pseudosc
     strands = gff_extracter.strandedness(unique, annotation, length_checker)
     phases = gff_extracter.phase_finder(unique, annotation, length_checker)
     attributes = gff_extracter.attribute_finder(unique, annotation, length_checker)
+    extracted_sequence = pseudoscaffold_tools.sequence_extracter(seq_list, unique)
     contig_pseudo = pseudoscaffold_tools.contig_finder(extracted_sequence, length_checker, pseudoscaffold)
     start, end = pseudoscaffold_tools.length_gff(extracted_sequence, length_checker, pseudoscaffold)
     gff3_builder(outfile, contig_pseudo, sources, types, start, end, scores, strands, phases, attributes, length_checker)
