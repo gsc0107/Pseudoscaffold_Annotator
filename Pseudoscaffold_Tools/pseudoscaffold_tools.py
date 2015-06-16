@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-#   A script to find information from the pseudoscaffold being annotated
+"""A script to find information from the pseudoscaffold being annotated"""
+
+#   Import required modules from standard Python library
 import re
 import sys
 

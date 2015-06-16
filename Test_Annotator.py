@@ -131,7 +131,7 @@ def pseudoscaffold_annotator():
         print "Found GFF file, making GFF file"
         import GFF_Tools.gff_to_gff as gff_to_gff
         import GFF_Tools.gff_extracter as gff_extracter
-        contig_original, length_final = gff_extracter.contig_extracter(reference, annotation)
+        contig_original, length_final = gff_extracter.contig_extracter(annotation)
         if __name__ == '__main__':
             lock = Lock()
             for unique in contig_original:
