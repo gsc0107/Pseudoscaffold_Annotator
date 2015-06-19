@@ -122,7 +122,9 @@ def extension_creator(gff, bed):
 
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
-def pseudoscaffold_annotator():
+def pseudoscaffold_annotator(temppath):
+    if not os.getcwd() == temppath:
+        os.chdir(temppath)
     seq_list = extraction_sh(args.reference, args.annotation)
     annotation, reference, pseudoscaffold = opener(args.annotation, args.reference, args.pseudoscaffold)
     find_gff, find_bed = extension_searcher(gff, bed)
@@ -137,7 +139,7 @@ def pseudoscaffold_annotator():
             for unique in contig_original:
                 out=str(unique+"_out.gff")
                 print out
-                Process(target=gff_to_gff.gff_to_gff, args=(lock, seq_list, unique, reference, annotation, pseudoscaffold, out)).start()
+                Process(target=gff_to_gff.gff_to_gff, args=(lock, seq_list, unique, reference, annotation, pseudoscaffold, out, temppath)).start()
     elif find_gff and create_bed:
         print "Found GFF file, making BED file"
         import GFF_Tools.gff_to_bed as gff_to_bed
@@ -169,6 +171,9 @@ def main():
         import Pseuoscaffold_Tools.pseudoscaffold_fixer as pseudoscaffold_fixer
         pseudoscaffold_fixer.main(args.pseudoscaffold, args.outfile)
     else:
-        pseudoscaffold_annotator()
+        import Pseudoscaffold_Tools.annotation_utilities as annotation_utilities
+        rootpath, tempdir, temppath = annotation_utilities.tempdir_creator()
+        pseudoscaffold_annotator(temppath)
+        annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args.outfile)
 
 main()

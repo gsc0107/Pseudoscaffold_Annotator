@@ -4,10 +4,11 @@
 
 #   Import required modules from standard Python library
 import re
-import gff_extracter
+import os
 
 #   Import functions defined in another script bundled with this package
 import Pseudoscaffold_Tools.pseudoscaffold_tools as pseudoscaffold_tools
+import gff_extracter
 
 
 #   Find the number of times this a contig shows up in original annotaiton file
@@ -51,9 +52,11 @@ def gff3_builder(outfile, contig_pseudo, source, types, start, end, score, stran
 
 
 #   Do the work here
-def gff_to_gff(lock, seq_list, unique, reference, annotation, pseudoscaffold, outfile):
+def gff_to_gff(lock, seq_list, unique, reference, annotation, pseudoscaffold, outfile, temppath):
     """Extract information from original annotation file and match it up to sequences defined in pseudoscaffold. Then build a GFF annotation using this data for the pseudoscaffold"""
 #    lock.acquire()
+    if not os.getcwd() == temppath:
+        os.chdir(temppath)
     length_checker = find_length(unique, annotation)
     sources = gff_extracter.source_finder(unique, annotation, length_checker)
     types = gff_extracter.type_finder(unique, annotation, length_checker)
