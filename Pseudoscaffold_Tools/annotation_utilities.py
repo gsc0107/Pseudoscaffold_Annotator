@@ -27,4 +27,5 @@ def annotation_builder(rootpath, tempdir, temppath, outfile):
     annotation = open(outfile, 'a')
     for part in annotation_parts:
         part_data = open(part).read
-        part.write(part_data)
+        annotation.write(part_data)
+    annotation.close()
