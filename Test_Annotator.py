@@ -96,10 +96,11 @@ def opener(annotation, reference, pseudoscaffold):
 
 
 #   Create a FASTA file of sequences defined by original annotation file
-def extraction_sh(reference, annotation):
+def extraction_sh(reference, annotation, rootpath):
     tmp = 'pseudoscaffold_annotator_temp.fasta'
     print("Searching for original sequences using 'extraction.sh'")
-    extraction_cmd = ['bash', './Shell_Scripts/extraction.sh', reference, annotation, tmp]
+    extraction_script = str(rootpath + '/Shell_Scripts/extraction.sh')
+    extraction_cmd = ['bash', extraction_script, reference, annotation, tmp]
     extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = extraction_shell.communicate()
     seq_list = open(tmp).read()
@@ -122,10 +123,10 @@ def extension_creator(gff, bed):
 
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
-def pseudoscaffold_annotator(temppath):
+def pseudoscaffold_annotator(temppath, rootpath):
     if not os.getcwd() == temppath:
         os.chdir(temppath)
-    seq_list = extraction_sh(args.reference, args.annotation)
+    seq_list = extraction_sh(args.reference, args.annotation, rootpath)
     annotation, reference, pseudoscaffold = opener(args.annotation, args.reference, args.pseudoscaffold)
     find_gff, find_bed = extension_searcher(gff, bed)
     create_gff, create_bed = extension_creator(gff, bed)
@@ -173,7 +174,7 @@ def main():
     else:
         import Pseudoscaffold_Tools.annotation_utilities as annotation_utilities
         rootpath, tempdir, temppath = annotation_utilities.tempdir_creator()
-        pseudoscaffold_annotator(temppath)
+        pseudoscaffold_annotator(temppath, rootpath)
         annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args.outfile)
 
 main()
