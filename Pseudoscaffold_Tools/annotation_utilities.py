@@ -10,9 +10,13 @@ import re
 def tempdir_creator():
     rootpath = os.getcwd()
     tempdir = 'temp'
-    os.mkdir(tempdir)
-    os.chdir(tempdir)
-    temppath = os.getcwd()
+    if re.search(tempdir, str(os.listdir('.'))):
+        os.chdir(tempdir)
+        temppath = os.getcwd()
+    else:
+        os.mkdir(tempdir)
+        os.chdir(tempdir)
+        temppath = os.getcwd()
     return(rootpath, tempdir, temppath)
 
 
