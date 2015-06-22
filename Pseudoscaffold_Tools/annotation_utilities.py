@@ -24,7 +24,7 @@ def tempdir_creator():
 def annotation_builder(rootpath, tempdir, temppath, outfile):
     if not os.getcwd() == temppath:
         os.chdir(temppath)
-    file_list = os.listdir('.')
+    file_list = str(os.listdir('.'))
     extension = outfile.split('.')[-1]
     file_finder = re.compile(ur'([a-zA-Z0-9-_\.]*)%s'%(extension))
     annotation_parts = file_finder.findall(file_list)
