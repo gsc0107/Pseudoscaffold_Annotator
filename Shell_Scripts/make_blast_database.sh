@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#   A small shell script to make a BLAST database
+#   out of an input pseudoscaffold
+
 set -e
 set -u
 set -o pipefail
@@ -17,5 +20,6 @@ fi
 
 INPUT_PSEUDOSCAFFOLD="$1"
 OUTPUT_DATABASE="$2"
+DATABASE_TYPE=
 
-makeblastdb -in ${INPUT_PSEUDOSCAFFOLD} -dbytpe nucl -out ${OUTPUT_DATABASE}
+makeblastdb -in ${INPUT_PSEUDOSCAFFOLD} -dbytpe ${DATABASE_TYPE} -out ${OUTPUT_DATABASE} -parse_seqids

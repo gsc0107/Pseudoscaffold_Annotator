@@ -18,11 +18,11 @@ def make_blast_database(rootpath, pseudoscaffold):
     database_cmd = ['bash', database_script, pseudoscaffold, database_name]
     database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = database_shell.communicate()
-
+    return(database_name, out, err)
 
 
 #   Define the BLAST program
-def run_blast():
+def run_blast(sequence, blast_settings, ):
     blastn_cline = NcbiblastnCommandline()
     blastn_cline()
 
@@ -42,3 +42,12 @@ def blast_parser():
         for hsp in alignment.hsps:
             if hsp.expect < threshold:
                 
+
+
+#   Find matches from BLAST search
+def blast_match():
+    import subprocess
+    matching_script = str(rootpath + 'Shell_Scripts/blast_database_sequence.sh')
+    matching_cmd = ['bash', matching_script]
+    matching_shell = subprocess.Popen(matching_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = matching_shell.communicate()
