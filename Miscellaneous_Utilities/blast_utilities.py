@@ -2,6 +2,8 @@
 
 """A script to hold functions utilizing NCBI's BLAST+"""
 
+import sys
+
 #   Import required functions from the BioPython module
 try:
     from Bio.Blast.Applications import NcbiblastnCommandline
@@ -35,13 +37,13 @@ def blast_parser():
     try:
         while True:
             blast_record = next(blast_records)
-        except StopIteration:
+    except StopIteration:
             pass
     parse_results = open()
     for alignment in blast_record.alignments:
         for hsp in alignment.hsps:
             if hsp.expect < threshold:
-                
+                pass
 
 
 #   Find matches from BLAST search
