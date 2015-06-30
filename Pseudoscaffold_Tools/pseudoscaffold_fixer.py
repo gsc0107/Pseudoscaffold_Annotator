@@ -4,6 +4,7 @@
 
 #   Import required modules from standard Python library
 import sys
+import os
 import re
 
 #   Open the pseudoscaffold for reading and the outfile for writing
@@ -36,6 +37,14 @@ def pseudoscaffold_fixer(pseudo, pseudo_indecies, fixed):
         fixed.write("".join(pseudo[pseudo_indecies[len(pseudo_indecies)-1]+1:len(pseudo)-1]))
         fixed.write('\n')
     fixed.close()
+    return
+
+#   Print closing message
+def finished(outfile):
+    """Print a closing message"""
+    sys.displayhook("Fixed pseudoscaffold can be found at " os.getcwd() + "/" + outfile)
+    sys.exit(0)
+
 
 #   Do the work
 def main(pseuodoscaffold, outfile):
@@ -43,3 +52,4 @@ def main(pseuodoscaffold, outfile):
     pseudo, fixed = opener(pseuodoscaffold, outfile)
     pseudo_indecies = contig_extracter(pseudo)
     pseudoscaffold_fixer(pseudo, pseudo_indecies, fixed)
+    finished(outfile)
