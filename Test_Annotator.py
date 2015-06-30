@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 #   Import required modules from standard Python library
-import argparse
 import subprocess
 import os
 import sys
@@ -12,43 +11,7 @@ from multiprocessing import Process, Lock
 
 #   Import functions defined in another script bundled with this package
 import Pseudoscaffold_Tools.pseudoscaffold_tools as pseudoscaffold_tools
-
-#   Define the arguments
-Arguments = argparse.ArgumentParser(add_help=True)
-Arguments.add_argument('fix',
-    nargs='?',
-    default=None,
-    help="Fix the pseudoscaffold so that it can be annotated")
-Arguments.add_argument('-r',
-    '--reference',
-    type=str,
-    default=None,
-    metavar='REFERENCE FASTA',
-    help="Input reference FASTA file")
-
-Arguments.add_argument('-a',
-    '--annotation',
-    type=str,
-    default=None,
-    metavar='ANNOTATION',
-    help="Annotation file for reference FASTA")
-
-Arguments.add_argument('-p',
-    '--pseudoscaffold',
-    type=str,
-    default=None,
-    metavar='PSEUDOSCAFFOLD FASTA',
-    help="Pseudoscaffold to be annotated")
-
-Arguments.add_argument('-o',
-    '--outfile',
-    type=str,
-    default='pseudoscaffold_annotations.gff',
-    metavar='OUTFILE',
-    help="Desired name of output annotation file. Please put full file name, including extension. Defalt is 'pseudoscaffold_annotations.gff'")
-
-#   Parse the arguments
-args = Arguments.parse_args()
+import Miscellaneous_Utilities.argument_utilities as argument_utilities
 
 #   Create two regex objects for determining given and desired file extensions
 gff = re.compile(ur'(.*\.gff$)')
@@ -165,6 +128,7 @@ def pseudoscaffold_annotator(temppath, rootpath):
 
 #   Do the work here
 def main():
+    args = argument_utilities.set_args()
     if not sys.argv[1:]:
         Usage()
         exit(1)
