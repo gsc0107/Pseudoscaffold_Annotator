@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
-"""A script to assemble the annotation piecies for the pseudoscaffold"""
+"""A script to hold various functions for building an annotation file for the pseudoscaffold"""
 
 #   Import required modules from standard Python library
 import sys
 import os
 import re
 
+#   Create a temporary directory
 def tempdir_creator():
+    """Create a temporary directory for partial annotation files"""
     rootpath = os.getcwd()
     tempdir = 'temp'
     if re.search(tempdir, str(os.listdir('.'))):
@@ -22,6 +24,7 @@ def tempdir_creator():
 
 #   Build the full annotaiton from its parts
 def annotation_builder(rootpath, tempdir, temppath, outfile):
+    """Build the full annotation file from the partial annotaiton files"""
     if not os.getcwd() == temppath:
         os.chdir(temppath)
     file_list = str(os.listdir('.'))

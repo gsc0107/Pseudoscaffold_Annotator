@@ -80,7 +80,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath):
         import BED_Tools.bed_to_gff as bed_to_gff
         pass
     elif find_bed and create_bed:
-        print "Found BED file, making BEd file"
+        print "Found BED file, making BED file"
         import BED_Tools.bed_to_bed as bed_to_bed
         pass
     else:
