@@ -18,37 +18,6 @@ gff = re.compile(ur'(.*\.gff$)')
 bed = re.compile(ur'(.*\.bed$)')
 
 
-#   Usage message
-def Usage():
-    print'''Usage: Pseudoscaffold_Annotator.py -r | --reference <reference fasta> -a | --annotation <reference annotation file> -p | --pseudoscaffold <assembled pseudoscaffold fasta> -o | --outfile <name of output annotation file>
-
-Pseudoscaffold_Annotator.py creates a GFF annotation file
-for an assembled pseudoscaffold fasta file based off a
-reference fasta file and GFF annotation file for the
-reference fasta file. Support for the BED format
-will be included in a later release.
-
-This program requires bedtools to be installed and
-found within the system path. Please do this before
-running Pseudscaffold_Annotator.py
-
-***IMPORTANT***
-Pseudoscaffold_Annotator.py requires no new lines
-within the sequence of the pseudoscaffold.
-The following is not an allowed sequence:
-        >pseudoscaffold
-        ACTGTCAG
-        GCTATCGA
-
-pseudoscaffold_fixer.py removes new lines
-between sequence data, creating a fasta
-file that reads like:
-        >pseudoscaffold
-        ACTGTCAGGCTATCGA
-'''
-    return
-
-
 #   Open the files
 def opener(annotation, reference, pseudoscaffold):
     annotations = open(annotation).read()
@@ -72,27 +41,27 @@ def extraction_sh(reference, annotation, rootpath):
 
 
 #   Find the extension of the given annotation file
-def extension_searcher(gff, bed):
-    find_gff = gff.search(args.annotation)
-    find_bed = bed.search(args.annotation)
+def extension_searcher(gff, bed, annotation):
+    find_gff = gff.search(annotation)
+    find_bed = bed.search(annotation)
     return(find_gff, find_bed)
 
 
 #   Find the desired extension of the pseudoscaffold annotation file
-def extension_creator(gff, bed):
-    create_gff = gff.search(args.outfile)
-    create_bed = bed.search(args.annotation)
+def extension_creator(gff, bed, outfile):
+    create_gff = gff.search(outfile)
+    create_bed = bed.search(outfile)
     return(create_gff, create_bed)
 
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
-def pseudoscaffold_annotator(temppath, rootpath):
+def pseudoscaffold_annotator(args, temppath, rootpath):
     if not os.getcwd() == temppath:
         os.chdir(temppath)
-    seq_list = extraction_sh(args.reference, args.annotation, rootpath)
-    annotation, reference, pseudoscaffold = opener(args.annotation, args.reference, args.pseudoscaffold)
-    find_gff, find_bed = extension_searcher(gff, bed)
-    create_gff, create_bed = extension_creator(gff, bed)
+    seq_list = extraction_sh(args['reference'], args['annotation'], rootpath)
+    annotation, reference, pseudoscaffold = opener(args['annotation'], args['reference'], args['pseudoscaffold'])
+    find_gff, find_bed = extension_searcher(gff, bed, args['annotation'])
+    create_gff, create_bed = extension_creator(gff, bed, args['outfile'])
     if find_gff and create_gff:
         print "Found GFF file, making GFF file"
         import GFF_Tools.gff_to_gff as gff_to_gff
@@ -128,17 +97,23 @@ def pseudoscaffold_annotator(temppath, rootpath):
 
 #   Do the work here
 def main():
-    args = argument_utilities.set_args()
     if not sys.argv[1:]:
-        Usage()
+        argument_utilities.Usage()
         exit(1)
-    elif args.fix:
-        import Pseuoscaffold_Tools.pseudoscaffold_fixer as pseudoscaffold_fixer
-        pseudoscaffold_fixer.main(args.pseudoscaffold, args.outfile)
-    else:
-        import Pseudoscaffold_Tools.annotation_utilities as annotation_utilities
+    args = vars(argument_utilities.set_args())
+    print(args)
+    if args['command'] == 'fix':
+        import Pseudoscaffold_Tools.pseudoscaffold_fixer as pseudoscaffold_fixer
+        pseudoscaffold_fixer.main(args['pseudoscaffold'], args['pseudoscaffold_fixer'])
+    elif args['command'] == 'blast-config':
+        pass
+    elif args['command'] == 'annotate':
+        import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
         rootpath, tempdir, temppath = annotation_utilities.tempdir_creator()
-        pseudoscaffold_annotator(temppath, rootpath)
-        annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args.outfile)
+        pseudoscaffold_annotator(args, temppath, rootpath)
+        annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
+    else:
+        argument_utilities.Usage()
+        exit(1)
 
 main()
