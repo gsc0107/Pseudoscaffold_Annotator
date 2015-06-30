@@ -12,6 +12,7 @@ from multiprocessing import Process, Lock
 #   Import functions defined in another script bundled with this package
 import Pseudoscaffold_Tools.pseudoscaffold_tools as pseudoscaffold_tools
 import Miscellaneous_Utilities.argument_utilities as argument_utilities
+import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
 
 #   Create two regex objects for determining given and desired file extensions
 gff = re.compile(ur'(.*\.gff$)')
@@ -42,21 +43,6 @@ def extraction_sh(reference, annotation, rootpath):
     return(seq_list)
 
 
-#   Find the extension of the given annotation file
-def extension_searcher(gff, bed, annotation):
-    """Figure out the type (BED or GFF) of annotation file we're working with"""
-    find_gff = gff.search(annotation)
-    find_bed = bed.search(annotation)
-    return(find_gff, find_bed)
-
-
-#   Find the desired extension of the pseudoscaffold annotation file
-def extension_creator(gff, bed, outfile):
-    """Figure out the desired type (BED or GFF) of annotation file"""
-    create_gff = gff.search(outfile)
-    create_bed = bed.search(outfile)
-    return(create_gff, create_bed)
-
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
 def pseudoscaffold_annotator(args, temppath, rootpath):
@@ -65,8 +51,8 @@ def pseudoscaffold_annotator(args, temppath, rootpath):
         os.chdir(temppath)
     seq_list = extraction_sh(args['reference'], args['annotation'], rootpath)
     annotation, reference, pseudoscaffold = opener(args['annotation'], args['reference'], args['pseudoscaffold'])
-    find_gff, find_bed = extension_searcher(gff, bed, args['annotation'])
-    create_gff, create_bed = extension_creator(gff, bed, args['outfile'])
+    find_gff, find_bed = annotation_utilities.extension_searcher(gff, bed, args['annotation'])
+    create_gff, create_bed = annotation_utilities.extension_creator(gff, bed, args['outfile'])
     if find_gff and create_gff:
         print "Found GFF file, making GFF file"
         import GFF_Tools.gff_to_gff as gff_to_gff
@@ -114,7 +100,6 @@ def main():
     elif args['command'] == 'blast-config':
         pass
     elif args['command'] == 'annotate':
-        import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
         rootpath, tempdir, temppath = annotation_utilities.tempdir_creator()
         pseudoscaffold_annotator(args, temppath, rootpath)
         annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
