@@ -3,6 +3,7 @@
 """A script to hold functions utilizing NCBI's BLAST+"""
 
 import sys
+import os
 
 #   Import required functions from the BioPython module
 try:
@@ -15,7 +16,7 @@ except ImportError:
 #   Make a BLAST database
 def make_blast_database(rootpath, pseudoscaffold):
     import subprocess
-    database_name = ''
+    database_name = os.path.basename(pseudoscaffold)
     database_script = str(rootpath + 'Shell_Scripts/make_blast_database.sh')
     database_cmd = ['bash', database_script, pseudoscaffold, database_name]
     database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -24,9 +25,17 @@ def make_blast_database(rootpath, pseudoscaffold):
 
 
 #   Define the BLAST program
-def run_blast(sequence, blast_settings, ):
-    blastn_cline = NcbiblastnCommandline()
+def run_blast(sequence, database_name ):
+    blast_out = ''
+    blastn_cline = NcbiblastnCommandline(
+        query=sequence,
+        db=database_name,
+        evalue=evalue,
+        max_target_seqs=max_seqs,
+        outfmt=5,
+        out=blast_out)
     blastn_cline()
+    return(blast_out)
 
 
 #   Parse the BLAST output
@@ -53,3 +62,4 @@ def blast_match():
     matching_cmd = ['bash', matching_script]
     matching_shell = subprocess.Popen(matching_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = matching_shell.communicate()
+    return(out, err)
