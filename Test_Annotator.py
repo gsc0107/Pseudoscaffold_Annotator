@@ -20,6 +20,7 @@ bed = re.compile(ur'(.*\.bed$)')
 
 #   Open the files
 def opener(annotation, reference, pseudoscaffold):
+    """Open the reference annotation, reference sequence, and pseudoscaffold for working"""
     annotations = open(annotation).read()
     references = open(reference).read()
     pseudoscaffolds = open(pseudoscaffold).read()
@@ -29,6 +30,7 @@ def opener(annotation, reference, pseudoscaffold):
 
 #   Create a FASTA file of sequences defined by original annotation file
 def extraction_sh(reference, annotation, rootpath):
+    """Extract the sequences defined by the annotation file from the refernce fasta file"""
     tmp = 'pseudoscaffold_annotator_temp.fasta'
     print("Searching for original sequences using 'extraction.sh'")
     extraction_script = str(rootpath + '/Shell_Scripts/extraction.sh')
@@ -42,6 +44,7 @@ def extraction_sh(reference, annotation, rootpath):
 
 #   Find the extension of the given annotation file
 def extension_searcher(gff, bed, annotation):
+    """Figure out the type (BED or GFF) of annotation file we're working with"""
     find_gff = gff.search(annotation)
     find_bed = bed.search(annotation)
     return(find_gff, find_bed)
@@ -49,6 +52,7 @@ def extension_searcher(gff, bed, annotation):
 
 #   Find the desired extension of the pseudoscaffold annotation file
 def extension_creator(gff, bed, outfile):
+    """Figure out the desired type (BED or GFF) of annotation file"""
     create_gff = gff.search(outfile)
     create_bed = bed.search(outfile)
     return(create_gff, create_bed)
@@ -56,6 +60,7 @@ def extension_creator(gff, bed, outfile):
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
 def pseudoscaffold_annotator(args, temppath, rootpath):
+    """Start annotating the pseudoscaffold"""
     if not os.getcwd() == temppath:
         os.chdir(temppath)
     seq_list = extraction_sh(args['reference'], args['annotation'], rootpath)
@@ -97,6 +102,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath):
 
 #   Do the work here
 def main():
+    """Read arguments, determine which subroutine to run, and run it"""
     if not sys.argv[1:]:
         argument_utilities.Usage()
         exit(1)

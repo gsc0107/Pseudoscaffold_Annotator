@@ -39,6 +39,7 @@ def pseudoscaffold_fixer(pseudo, pseudo_indecies, fixed):
     fixed.close()
     return
 
+
 #   Print closing message
 def finished(outfile):
     """Print a closing message"""
