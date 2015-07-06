@@ -23,6 +23,5 @@ DATABASE=
 DATABASE_TYPE
 OUTFILE=
 OUT_FORMAT="%f"
-INPUT_
 
 blastdbcmd -entry ? -db $DATABASE -dbtype = $DATABASE_TYPE -out $OUTFILE -outfmt $OUT_FORMAT

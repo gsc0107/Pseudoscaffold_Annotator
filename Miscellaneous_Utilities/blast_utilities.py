@@ -52,7 +52,7 @@ def blast_parser():
     for alignment in blast_record.alignments:
         for hsp in alignment.hsps:
             if hsp.expect < threshold:
-                pass
+                start = hsp.sbjt_start
 
 
 #   Find matches from BLAST search
