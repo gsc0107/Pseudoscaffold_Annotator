@@ -15,6 +15,7 @@ except ImportError:
 
 #   Make a BLAST database
 def make_blast_database(rootpath, pseudoscaffold):
+    """Make a BLAST database from the pseudoscaffold using a shell script and NCBI's BLAST+ excecutables"""
     import subprocess
     database_name = os.path.basename(pseudoscaffold)
     database_script = str(rootpath + 'Shell_Scripts/make_blast_database.sh')
