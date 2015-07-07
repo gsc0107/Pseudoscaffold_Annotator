@@ -84,25 +84,32 @@ def pseudoscaffold_annotator(args, temppath, rootpath):
         import BED_Tools.bed_to_bed as bed_to_bed
         pass
     else:
-        sys.exit("Could not determine neither file format of input nor desired format of output file. Please make sure extensions are typed out fully.")
+        sys.exit("Could determine neither file format of input nor desired format of output file. Please make sure extensions are typed out fully.")
 
 #   Do the work here
 def main():
     """Read arguments, determine which subroutine to run, and run it"""
+    #   No arguments give, display usage message
     if not sys.argv[1:]:
         argument_utilities.Usage()
         exit(1)
+    #   Create a dictionary of arguments
     args = vars(argument_utilities.set_args())
     print(args)
+    #   Run the 'fix' subroutine
     if args['command'] == 'fix':
         import Pseudoscaffold_Tools.pseudoscaffold_fixer as pseudoscaffold_fixer
         pseudoscaffold_fixer.main(args['pseudoscaffold'], args['pseudoscaffold_fixer'])
+    #   Run the 'blast-config' subroutine
     elif args['command'] == 'blast-config':
-        pass
+        import Miscellaneous_Utilities.blast_utilities as blast_utilities
+        blast_utilities.make_blast_config(args)
+    #   Run the 'annotate' subroutine
     elif args['command'] == 'annotate':
         rootpath, tempdir, temppath = annotation_utilities.tempdir_creator()
         pseudoscaffold_annotator(args, temppath, rootpath)
         annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
+    #   Incorrect subroutine specified, display usage message
     else:
         argument_utilities.Usage()
         exit(1)

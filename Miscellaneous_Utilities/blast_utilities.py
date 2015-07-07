@@ -10,7 +10,7 @@ try:
     from Bio.Blast.Applications import NcbiblastnCommandline
     from Bio.Blast import NCBIXML
 except ImportError:
-    sys.exit("Please install BioPython")
+    sys.exit("Please install BioPython and put in your PythonPath")
 
 
 #   Make a BLAST database
@@ -22,6 +22,32 @@ def make_blast_database(rootpath, pseudoscaffold):
     database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = database_shell.communicate()
     return(database_name, out, err)
+
+
+#   Create BLAST config file
+def make_blast_config(args):
+    import ConfigParser
+    config_file = args.pop('config')
+    args.pop('command')
+    args_iterations = args.iteritems()
+    blast_config = ConfigParser.RawConfigParser()
+    blast_config.add_section('BlastConfiguration')
+    try:
+        while True:
+            current_args = args_iterations.next()
+            blast_config.set('BlastConfiguration', current_args[0], current_args[1])
+    except StopIteration:
+        config = open(config_file, 'wb')
+        blast_config.write(config)
+    test_reader = open(config_file).read()
+    print(test_reader)
+
+
+#   Read BLAST config file
+def blast_config_parser(config_file):
+    import ConfigParser
+    blast_config = ConfigParser.ConfigParser()
+    pass
 
 
 #   Define the BLAST program

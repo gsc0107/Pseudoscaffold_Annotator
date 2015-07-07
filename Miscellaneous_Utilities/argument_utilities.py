@@ -2,6 +2,11 @@
 
 #   Import required modules from standard Python library
 import argparse
+import os
+
+
+#   Set rootpath to current working directory
+rootpath = os.getcwd()
 
 #   Set and parse arguments
 def set_args():
@@ -40,6 +45,11 @@ def set_args():
         default=5,
         metavar='MAX TARGET SEQUENCES',
         help="Maximum number of target sequences for BLAST search, default is 5")
+    Blast_Arguments.add_argument('-c',
+        '--config',
+        metavar='BLAST CONFIG FILE',
+        default=rootpath+'/blast_config',
+        help="Full path to the BLAST configuration file. Defaults to "+rootpath+"/blast_config")
     #   Add parser for the annotator
     Annotate_Arguments = Sub_Args.add_parser('annotate', help='Annotate an input pseudoscaffold')
     Annotate_Arguments.add_argument('-r',
@@ -66,6 +76,11 @@ def set_args():
         default='pseudoscaffold_annotations.gff',
         metavar='OUTFILE',
         help="Desired name of output annotation file. Please put full file name, including extension. Defalt is 'pseudoscaffold_annotations.gff'")
+    Annotate_Arguments.add_argument('-c',
+        '--config',
+        metavar='BLAST CONFIG FILE',
+        default=rootpath+'/blast_config',
+        help="Full path the BLAST configuration file. ")
     #   Parse the arguments
     args = Arguments.parse_args()
     return(args)
