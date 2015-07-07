@@ -27,6 +27,7 @@ def make_blast_database(rootpath, pseudoscaffold):
 
 #   Create BLAST config file
 def make_blast_config(args):
+    """Create a BLAST configuration file using settings defined by the user"""
     import ConfigParser
     config_file = args.pop('config')
     args.pop('command')
