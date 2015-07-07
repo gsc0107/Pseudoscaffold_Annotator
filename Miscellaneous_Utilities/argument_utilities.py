@@ -89,17 +89,25 @@ def set_args():
 #   Usage message
 def Usage():
     """Prints usage message"""
-    print'''Usage: Pseudoscaffold_Annotator.py -r | --reference <reference fasta> -a | --annotation <reference annotation file> -p | --pseudoscaffold <assembled pseudoscaffold fasta> -o | --outfile <name of output annotation file>
+    print'''Usage: Pseudoscaffold_Annotator.py <subroutine>
+where: <subroutine> is one of
+        fix
+        blast-config
+        annotate
 
-Pseudoscaffold_Annotator.py creates a GFF annotation file
+The 'annotate' subroutine creates a GFF annotation file
 for an assembled pseudoscaffold fasta file based off a
 reference fasta file and GFF annotation file for the
 reference fasta file. Support for the BED format
 will be included in a later release.
 
-This program requires bedtools to be installed and
-found within the system path. Please do this before
-running Pseudscaffold_Annotator.py
+This program requires bedtools, BioPython and NCBI's BLAST+
+excecutables to be installed andfound within the system path.
+Please do this before running Pseudscaffold_Annotator.py
+
+To configure the parameters for the BLAST search,
+use the 'blast-config' subroutine to generate a new
+configuration file to be used by Pseudoscaffold_Annotator.py
 
 ***IMPORTANT***
 Pseudoscaffold_Annotator.py requires no new lines
@@ -109,7 +117,7 @@ The following is not an allowed sequence:
         ACTGTCAG
         GCTATCGA
 
-pseudoscaffold_fixer.py removes new lines
+The 'fix' subroutine removes new lines
 between sequence data, creating a fasta
 file that reads like:
         >pseudoscaffold
