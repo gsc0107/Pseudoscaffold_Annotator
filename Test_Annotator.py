@@ -10,7 +10,7 @@ import re
 from multiprocessing import Process, Lock
 
 #   Import functions defined in another script bundled with this package
-import Pseudoscaffold_Tools.pseudoscaffold_tools as pseudoscaffold_tools
+import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
 import Miscellaneous_Utilities.argument_utilities as argument_utilities
 import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
 
@@ -55,8 +55,8 @@ def pseudoscaffold_annotator(args, temppath, rootpath):
     create_gff, create_bed = annotation_utilities.extension_creator(gff, bed, args['outfile'])
     if find_gff and create_gff:
         print "Found GFF file, making GFF file"
-        import GFF_Tools.gff_to_gff as gff_to_gff
-        import GFF_Tools.gff_extracter as gff_extracter
+        import GFF_Utilities.gff_to_gff as gff_to_gff
+        import GFF_Utilities.gff_extracter as gff_extracter
         contig_original, length_final = gff_extracter.contig_extracter(annotation)
         if __name__ == '__main__':
             lock = Lock()
@@ -66,8 +66,8 @@ def pseudoscaffold_annotator(args, temppath, rootpath):
                 Process(target=gff_to_gff.gff_to_gff, args=(lock, seq_list, unique, reference, annotation, pseudoscaffold, out, temppath)).start()
     elif find_gff and create_bed:
         print "Found GFF file, making BED file"
-        import GFF_Tools.gff_to_bed as gff_to_bed
-        import GFF_Tools.gff_extracter as gff_extracter
+        import GFF_Utilities.gff_to_bed as gff_to_bed
+        import GFF_Utilities.gff_extracter as gff_extracter
         contig_original, length_checker = gff_extracter.contig_extracter(reference, annotation)
         if __name__ == '__main__':
             lock = Lock()
@@ -77,11 +77,11 @@ def pseudoscaffold_annotator(args, temppath, rootpath):
         pass
     elif find_bed and create_gff:
         print "Found BED file, making GFF file"
-        import BED_Tools.bed_to_gff as bed_to_gff
+        import BED_Utilities.bed_to_gff as bed_to_gff
         pass
     elif find_bed and create_bed:
         print "Found BED file, making BED file"
-        import BED_Tools.bed_to_bed as bed_to_bed
+        import BED_Utilities.bed_to_bed as bed_to_bed
         pass
     else:
         sys.exit("Could determine neither file format of input nor desired format of output file. Please make sure extensions are typed out fully.")
@@ -98,7 +98,7 @@ def main():
     print(args)
     #   Run the 'fix' subroutine
     if args['command'] == 'fix':
-        import Pseudoscaffold_Tools.pseudoscaffold_fixer as pseudoscaffold_fixer
+        import Pseudoscaffold_Utilities.pseudoscaffold_fixer as pseudoscaffold_fixer
         pseudoscaffold_fixer.main(args['pseudoscaffold'], args['pseudoscaffold_fixer'])
     #   Run the 'blast-config' subroutine
     elif args['command'] == 'blast-config':

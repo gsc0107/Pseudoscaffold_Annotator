@@ -69,21 +69,22 @@ def run_blast(sequence, database_name):
 
 
 #   Parse the BLAST output
-def blast_parser():
+def blast_parser(xml):
     """Parse the BLAST results"""
-    result_handle = open()
+    result_handle = open(xml)
     blast_records = NCBIXML.parse(result_handle)
-    blast_record = next(blast_records)
     try:
         while True:
-            blast_record = next(blast_records)
+            blast_record = blast_records.next()
+        for alignment in blast_record.alignments:
+            for hsp in alignment.hsps:
+                if hsp.expect < threshold:
+                    print("Next hit")
+                    print hsp.sbjct_start
+                    print hsp.sbjct_end
+                    print("That's all folks")
     except StopIteration:
-            pass
-    parse_results = open()
-    for alignment in blast_record.alignments:
-        for hsp in alignment.hsps:
-            if hsp.expect < threshold:
-                start = hsp.sbjt_start
+        pass
 
 
 #   Find matches from BLAST search

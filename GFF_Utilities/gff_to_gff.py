@@ -7,7 +7,7 @@ import re
 import os
 
 #   Import functions defined in another script bundled with this package
-import Pseudoscaffold_Tools.pseudoscaffold_tools as pseudoscaffold_tools
+import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
 import gff_extracter
 
 
