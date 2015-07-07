@@ -18,7 +18,7 @@ else
     exit 1
 fi
 
-#   our arguments
+#   Arguments being used
 DATABASE=
 DATABASE_TYPE
 OUTFILE=
