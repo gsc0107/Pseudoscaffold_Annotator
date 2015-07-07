@@ -47,13 +47,15 @@ def make_blast_config(args):
 
 #   Read BLAST config file
 def blast_config_parser(config_file):
+    """Read the BLAST configuration file and pass arguments to BLAST functions"""
     import ConfigParser
     blast_config = ConfigParser.ConfigParser()
     pass
 
 
 #   Define the BLAST program
-def run_blast(sequence, database_name ):
+def run_blast(sequence, database_name):
+    """Run BLASTN to find sequences within the pseudoscaffold"""
     blast_out = ''
     blastn_cline = NcbiblastnCommandline(
         query=sequence,
@@ -68,6 +70,7 @@ def run_blast(sequence, database_name ):
 
 #   Parse the BLAST output
 def blast_parser():
+    """Parse the BLAST results"""
     result_handle = open()
     blast_records = NCBIXML.parse(result_handle)
     blast_record = next(blast_records)
