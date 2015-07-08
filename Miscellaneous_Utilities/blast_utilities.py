@@ -21,6 +21,8 @@ def make_blast_config(args):
     args.pop('command')
     if not args['db_name']:
         args.pop('db_name')
+    if not args['outfile']:
+        args.pop('outfile')
     args_iterations = args.iteritems()
     blast_config = ConfigParser.RawConfigParser()
     blast_config.add_section('BlastConfiguration')
@@ -74,7 +76,10 @@ def make_blast_database(bconf, shellpath, pseudoscaffold):
 #   Define the BLAST program
 def blast_search(bconf, unique_sequence, database_name):
     """Run BLASTN to find sequences within the pseudoscaffold"""
-    blast_out = bconf['outfile']
+    if bconf.get('outfile') == None:
+        blast_out = temppath + '/temp.xml'
+    else:
+        blast_out = bconf['outfile']
     blastn_cline = NcbiblastnCommandline(
         query=unique_sequence,
         db=database_name,
@@ -126,8 +131,8 @@ def title_fixer(titles):
     return(fixed_titles)
 
 #   Run the BLAST search and parse the results
-def run_blast(bconf, unique_sequence, database_name, length_checker):
-    blast_out = blast_search(bconf, unique_sequence, database_name)
+def run_blast(bconf, unique_sequence, database_name, length_checker, temppath):
+    blast_out = blast_search(bconf, unique_sequence, database_name, temppath)
     titles, starts, ends = blast_parser(bconf, blast_out)
     fixed_titles = title_fixer(titles)
     if not len(fixed_titles) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:

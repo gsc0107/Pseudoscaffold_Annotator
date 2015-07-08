@@ -67,7 +67,7 @@ def set_args():
         '--outfile',
         type=str,
         dest='outfile',
-        default=rootpath+'/temp/blast_results.xml',
+        default=None,
         metavar='BLAST RESULTS',
         help="Path to BLAST results if you wish to keep them, defaults to a temporary file")
     Blast_Arguments.add_argument('-d',
