@@ -12,14 +12,16 @@ set -o pipefail
 
 if `command -v makeblastdb > /dev/null 2> /dev/null`
 then
-    echo "BLAST+ installed"
+    echo "BLAST+ installed" >&2
 else
-    echo "You need NCBI's BLAST+ utilities installed and in your PATH"
+    echo "You need NCBI's BLAST+ utilities installed and in your PATH" >&2
     exit 1
 fi
 
-echo "$@"
-echo "$#"
+echo "$@" >> args.txt
+echo "$#" >> args.txt
+
+exit 0
 
 #INPUT_PSEUDOSCAFFOLD="$1"
 #OUTPUT_DATABASE="$2"
