@@ -18,8 +18,12 @@ else
     exit 1
 fi
 
-INPUT_PSEUDOSCAFFOLD="$1"
-OUTPUT_DATABASE="$2"
-DB_TYPE="$3"
+echo "$@"
+echo "$#"
 
-makeblastdb -in ${INPUT_PSEUDOSCAFFOLD} -dbytpe ${DB_TYPE} -out ${OUTPUT_DATABASE}
+#INPUT_PSEUDOSCAFFOLD="$1"
+#OUTPUT_DATABASE="$2"
+#DB_TYPE="$3"
+#EXT="$4"
+
+#makeblastdb -in ${INPUT_PSEUDOSCAFFOLD} -dbytpe ${DB_TYPE} -out ${OUTPUT_DATABASE}
