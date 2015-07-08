@@ -21,12 +21,14 @@ def set_args():
     Fix_Arguments = Sub_Args.add_parser('fix', help='Fix an input pseudoscaffold for use with the annotator')
     Fix_Arguments.add_argument('-p',
         '--pseudoscaffold',
+        dest='pseudoscaffold',
         type=str,
         default=None,
         metavar='PSEUDOSCAFFOLD FASTA',
-        help="Pseudoscaffold to be annotated")
+        help="Pseudoscaffold to be fixed")
     Fix_Arguments.add_argument('-n',
         '--new-pseudoscaffold',
+        dest='new_pseudoscaffold',
         type=str,
         default='fixed_pseudoscaffolds.fasta',
         metavar='FIXED PSEUDOSCAFFOLD',
@@ -36,62 +38,86 @@ def set_args():
     Blast_Arguments.add_argument('-e',
         '--evalue',
         type=float,
+        dest='evalue',
         default=0.05,
         metavar='EVALUE',
         help="Evalue for BLAST search, default is 0.05")
     Blast_Arguments.add_argument('-m',
-        '--max_seqs',
+        '--max-seqs',
         type=int,
+        dest='max_seqs',
         default=1,
         metavar='MAX TARGET SEQUENCES',
         help="Maximum number of target sequences for BLAST search, default is 1")
     Blast_Arguments.add_argument('-f',
         '--outfmt',
         type=int,
+        dest='outfmt',
         default=5,
         metavar='OUTFORMAT',
         help="Outformat for BLAST results, defaults to '5' (XML). Using any other format will require a separate parser and will be incompatible with 'Pseudoscaffold_Annotator'")
     Blast_Arguments.add_argument('-t',
         '--threshold',
         type=float,
+        dest='threshold',
         default=0.04,
         metavar='THRESHOLD',
         help="Threshold for parsing BLAST results, default is 0.04")
+    Blast_Arguments.add_argument('-o',
+        '--outfile',
+        type=str,
+        dest='outfile',
+        default=rootpath+'/temp/blast_results.xml',
+        metavar='BLAST RESULTS',
+        help="Path to BLAST results if you wish to keep them, defaults to a temporary file")
+    Blast_Arguments.add_argument('-d',
+        '--database-name',
+        type=str,
+        dest='db_name',
+        default=None,
+        metavar='DATABASE NAME',
+        help='Name of BLAST database, defaults to name of pseudoscaffold')
     Blast_Arguments.add_argument('-c',
         '--config',
-        metavar='BLAST CONFIG FILE',
+        dest='config',
         default=rootpath+'/blast_config',
+        metavar='BLAST CONFIG FILE',
         help="Full path to the BLAST configuration file. Defaults to "+rootpath+"/blast_config")
     #   Add parser for the annotator
     Annotate_Arguments = Sub_Args.add_parser('annotate', help='Annotate an input pseudoscaffold')
     Annotate_Arguments.add_argument('-r',
         '--reference',
         type=str,
+        dest='reference',
         default=None,
         metavar='REFERENCE FASTA',
         help="Input reference FASTA file")
     Annotate_Arguments.add_argument('-a',
         '--annotation',
         type=str,
+        dest='annotation',
         default=None,
         metavar='ANNOTATION',
         help="Annotation file for reference FASTA")
     Annotate_Arguments.add_argument('-p',
         '--pseudoscaffold',
         type=str,
+        dest='pseudoscaffold',
         default=None,
         metavar='PSEUDOSCAFFOLD FASTA',
         help="Pseudoscaffold to be annotated")
     Annotate_Arguments.add_argument('-o',
         '--outfile',
-            type=str,
+        type=str,
+        dest='outfile',
         default='pseudoscaffold_annotations.gff',
         metavar='OUTFILE',
         help="Desired name of output annotation file. Please put full file name, including extension. Defalt is 'pseudoscaffold_annotations.gff'")
     Annotate_Arguments.add_argument('-c',
         '--config',
-        metavar='BLAST CONFIG FILE',
+        dest='cfile',
         default=rootpath+'/blast_config',
+        metavar='BLAST CONFIG FILE',
         help="Full path the BLAST configuration file. ")
     #   Parse the arguments
     args = Arguments.parse_args()

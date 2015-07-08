@@ -19,33 +19,38 @@ def opener(annotation, reference, pseudoscaffold):
     return(annotations, references, pseudoscaffolds)
 
 
-#   Create a FASTA file of sequences defined by original annotation file
-def extraction_sh(reference, annotation, rootpath):
-    """Extract the sequences defined by the annotation file from the refernce fasta file"""
-    tmp = 'pseudoscaffold_annotator_temp.fasta'
-    print("Searching for original sequences using 'extraction.sh'")
-    extraction_script = str(rootpath + '/Shell_Scripts/extraction.sh')
-    extraction_cmd = ['bash', extraction_script, reference, annotation, tmp]
-    extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = extraction_shell.communicate()
-    seq_list = open(tmp).read()
-    os.remove(tmp)
-    return(seq_list)
-
-
 #   Create a temporary directory
 def tempdir_creator():
-    """Create a temporary directory for partial annotation files"""
+    """Create a temporary directory for partial annotation files and find the 'Shell_Scripts' directory"""
     rootpath = os.getcwd()
+    rootlist = str(os.listdir(rootpath))
+    if re.search('Shell_Scripts', rootlist):
+        shellpath = rootpath + '/Shell_Scripts'
+    else:
+        sys.exit("Cannot find 'Shell_Script' directory")
     tempdir = 'temp'
-    if re.search(tempdir, str(os.listdir('.'))):
+    if re.search(tempdir, rootlist):
         os.chdir(tempdir)
         temppath = os.getcwd()
     else:
         os.mkdir(tempdir)
         os.chdir(tempdir)
         temppath = os.getcwd()
-    return(rootpath, tempdir, temppath)
+    return(rootpath, tempdir, temppath, shellpath)
+
+
+#   Create a FASTA file of sequences defined by original annotation file
+def extraction_sh(reference, annotation, shellpath):
+    """Extract the sequences defined by the annotation file from the refernce fasta file"""
+    tmp = 'pseudoscaffold_annotator_temp.fasta'
+    print("Searching for original sequences using 'extraction.sh'")
+    extraction_script = str(shellpath + '/extraction.sh')
+    extraction_cmd = ['bash', extraction_script, reference, annotation, tmp]
+    extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = extraction_shell.communicate()
+    seq_list = open(tmp).read()
+    os.remove(tmp)
+    return(seq_list)
 
 
 #   Build the full annotaiton from its parts

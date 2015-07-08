@@ -13,24 +13,14 @@ except ImportError:
     sys.exit("Please install BioPython and put in your PythonPath")
 
 
-#   Make a BLAST database
-def make_blast_database(rootpath, pseudoscaffold):
-    """Make a BLAST database from the pseudoscaffold using a shell script and NCBI's BLAST+ excecutables"""
-    import subprocess
-    database_name = os.path.basename(pseudoscaffold)
-    database_script = str(rootpath + 'Shell_Scripts/make_blast_database.sh')
-    database_cmd = ['bash', database_script, pseudoscaffold, database_name]
-    database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = database_shell.communicate()
-    return(database_name, out, err)
-
-
 #   Create BLAST config file
 def make_blast_config(args):
     """Create a BLAST configuration file using settings defined by the user"""
     import ConfigParser
     config_file = args.pop('config')
     args.pop('command')
+    if not args['db_name']:
+        args.pop('db_name')
     args_iterations = args.iteritems()
     blast_config = ConfigParser.RawConfigParser()
     blast_config.add_section('BlastConfiguration')
@@ -50,50 +40,87 @@ def blast_config_parser(config_file):
     import ConfigParser
     blast_config = ConfigParser.ConfigParser()
     blast_config.read(config_file)
-    pass
+    bconf = dict(blast_config.items('BlastConfiguration'))
+    return(bconf)
+
+
+#   Make a BLAST database
+def make_blast_database(bconf, shellpath, pseudoscaffold):
+    """Make a BLAST database from the pseudoscaffold using a shell script and NCBI's BLAST+ excecutables"""
+    import subprocess
+    if bconf.get('db_name') == None:
+        database_name = os.path.basename(pseudoscaffold)
+    else:
+        database_name = bconf['db_name']
+    database_script = str(shellpath + '/make_blast_database.sh')
+    database_cmd = ['bash', database_script, pseudoscaffold, database_name]
+    database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = database_shell.communicate()
+    return(database_name, out, err)
 
 
 #   Define the BLAST program
-def run_blast(sequence, database_name):
+def blast_search(bconf, unique_sequence, database_name):
     """Run BLASTN to find sequences within the pseudoscaffold"""
-    blast_out = ''
+    blast_out = bconf['outfile']
     blastn_cline = NcbiblastnCommandline(
-        query=sequence,
+        query=unique_sequence,
         db=database_name,
-        evalue=evalue,
-        max_target_seqs=max_seqs,
-        outfmt=5,
-        out=blast_out)
+        evalue=bconf['evalue'],
+        max_target_seqs=bconf['max_seqs'],
+        outfmt=bconf['outfmt'],
+        out=bconf['outfile'])
     blastn_cline()
     return(blast_out)
 
 
 #   Parse the BLAST output
-def blast_parser(xml):
+def blast_parser(bconf, blast_out):
     """Parse the BLAST results"""
-    result_handle = open(xml)
-    threshold = 0.04
+    result_handle = open(blast_out)
+    threshold = bconf['threshold']
+    titles = list()
+    starts = list()
+    ends = list()
     blast_records = NCBIXML.parse(result_handle)
-    brecord = next(blast_records)
     try:
         while True:
             brecord = next(blast_records)
+            for alignment in brecord.alignments:
+                for hsp in alignment.hsps:
+                    if hsp.expect < threshold:
+                        titles.append(alignment.title)
+                        starts.append(hsp.sbjct_start)
+                        ends.append(hsp.sbjct_end)
+                    break
     except StopIteration:
-        pass
-    for alignment in blast_record.alignments:
-        for hsp in alignment.hsps:
-            if hsp.expect < threshold:
-                print("Next hit")
-                print aln.title
-                print hsp.sbjct_start
-                print hsp.sbjct_end
-                print("That's all folks")
+        return(titles, starts, ends)
 
+
+#   Fix the titles of the hits, because NCBI's XML format is weird
+def title_fixer(titles):
+    fixed_titles = list()
+    for i in range(len(titles)):
+        title = titles[i]
+        split_title = title.split()
+        pseudo_contig = split_title[0]
+        fixed_titles.append(pseudo_contig)
+    return(fixed_titles)
+
+#   Run the BLAST search and parse the results
+def run_blast(bconf, unique_sequence, database_name, length_checker):
+    blast_out = blast_search(bconf, unique_sequence, database_name)
+    titles, starts, ends = blast_parser(bconf, blast_out)
+    fixed_titles = title_fixer(titles)
+    if not len(fixed_titles) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
+        sys.exit("Failed to find all sequences in BLAST search")
+    else:
+        return(fixed_titles, starts, ends)
 
 #   Find matches from BLAST search
 # def blast_match():
 #     import subprocess
-#     matching_script = str(rootpath + 'Shell_Scripts/blast_database_sequence.sh')
+#     matching_script = str(shellpath + '/blast_database_sequence.sh')
 #     matching_cmd = ['bash', matching_script]
 #     matching_shell = subprocess.Popen(matching_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 #     out, err = matching_shell.communicate()

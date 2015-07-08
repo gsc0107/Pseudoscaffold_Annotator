@@ -12,6 +12,7 @@ from multiprocessing import Process, Lock
 import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
 import Miscellaneous_Utilities.argument_utilities as argument_utilities
 import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
+import Miscellaneous_Utilities.blast_utilities as blast_utilities
 
 #   Create two regex objects for determining given and desired file extensions
 gff = re.compile(ur'(.*\.gff$)')
@@ -20,25 +21,39 @@ bed = re.compile(ur'(.*\.bed$)')
 
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
-def pseudoscaffold_annotator(args, temppath, rootpath):
+def pseudoscaffold_annotator(args, temppath, rootpath, shellpath):
     """Start annotating the pseudoscaffold"""
+    #   Change to temp directory
     if not os.getcwd() == temppath:
         os.chdir(temppath)
-    seq_list = annotation_utilities.extraction_sh(args['reference'], args['annotation'], rootpath)
+    #   Create full sequence list
+    seq_list = annotation_utilities.extraction_sh(args['reference'], args['annotation'], shellpath)
+    #   Read the annotation, reference, and pseudoscaffold files
     annotation, reference, pseudoscaffold = annotation_utilities.opener(args['annotation'], args['reference'], args['pseudoscaffold'])
+    #   Figure out what reference annotation file we have
     find_gff, find_bed = annotation_utilities.extension_searcher(gff, bed, args['annotation'])
+    #   Figure out what pseudoscaffold annotation file we are making
     create_gff, create_bed = annotation_utilities.extension_creator(gff, bed, args['outfile'])
+    #   Read the BLAST config file
+    bconf = blast_utilities.blast_config_parser(args['cfile'])
+    #   Make the BLAST databae
+    database_name, out, err = make_blast_database(bconf, shellpath, pseudoscaffold)
+    #   Annotate the pseudocaffold given an input and output annotation format
     if find_gff and create_gff:
         print "Found GFF file, making GFF file"
         import GFF_Utilities.gff_to_gff as gff_to_gff
         import GFF_Utilities.gff_extracter as gff_extracter
         contig_original, length_final = gff_extracter.contig_extracter(annotation)
-        if __name__ == '__main__':
-            lock = Lock()
-            for unique in contig_original:
-                out=str(unique+"_out.gff")
-                print out
-                Process(target=gff_to_gff.gff_to_gff, args=(lock, seq_list, unique, reference, annotation, pseudoscaffold, out, temppath)).start()
+        for unique in contig_original:
+            out = str(unique + '_out.gff')
+            gff_annotate = gff_to_gff.GFF(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name)
+            gff_annotate.gff_to_gff()
+        # if __name__ == '__main__':
+        #     lock = Lock()
+        #     for unique in contig_original:
+        #         out=str(unique+"_out.gff")
+        #         print out
+        #         Process(target=gff_to_gff.gff_to_gff, args=(lock, seq_list, unique, reference, annotation, pseudoscaffold, out, temppath)).start()
     elif find_gff and create_bed:
         print "Found GFF file, making BED file"
         import GFF_Utilities.gff_to_bed as gff_to_bed
@@ -78,13 +93,12 @@ def main():
         pseudoscaffold_fixer.main(args['pseudoscaffold'], args['new_pseudoscaffold'])
     #   Run the 'blast-config' subroutine
     elif args['command'] == 'blast-config':
-        import Miscellaneous_Utilities.blast_utilities as blast_utilities
         blast_utilities.make_blast_config(args)
     #   Run the 'annotate' subroutine
     elif args['command'] == 'annotate':
-        rootpath, tempdir, temppath = annotation_utilities.tempdir_creator()
-        pseudoscaffold_annotator(args, temppath, rootpath)
-        annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
+        rootpath, tempdir, temppath, shellpath = annotation_utilities.tempdir_creator()
+        pseudoscaffold_annotator(args, temppath, rootpath, shellpath)
+        #annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
     #   Incorrect subroutine specified, display usage message
     else:
         argument_utilities.Usage()
