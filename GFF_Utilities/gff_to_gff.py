@@ -18,7 +18,7 @@ class GFF(object):
         self.seq_list = seq_list
         self.unique = unique
         self.reference = reference
-        self.annotaiton = annotaiton
+        self.annotation = annotation
         self.pseudoscaffold = pseudoscaffold
         self.outfile = outfile
         self.temppath = temppath
@@ -26,11 +26,11 @@ class GFF(object):
         self.database_name = database_name
         return
 
-    #   Find the number of times this a contig shows up in original annotaiton file
+    #   Find the number of times this a contig shows up in original annotation file
     def find_length(self):
         """Creates a check for each part of the extraction process to ensure the correct amount of data is gathered from the original annotation file.
             The unique argument is the contig to search for within the annotation file.
-            The annotation argument is the original annotaiton file"""
+            The annotation argument is the original annotation file"""
         contig = re.compile(ur'(%s)'%(self.unique))
         length = contig.findall(self.annotation)
         length_checker = len(length)
