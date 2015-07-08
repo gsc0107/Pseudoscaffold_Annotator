@@ -77,6 +77,13 @@ def set_args():
         default=None,
         metavar='DATABASE NAME',
         help='Name of BLAST database, defaults to name of pseudoscaffold')
+    Blast_Arguments.add_argument('-b',
+        '--database-type',
+        type=str,
+        dest='db_type',
+        default='nucl',
+        metavar='DATABASE TYPE',
+        help="Type of BLAST database to be made, defaults to 'nucl'")
     Blast_Arguments.add_argument('-c',
         '--config',
         dest='config',

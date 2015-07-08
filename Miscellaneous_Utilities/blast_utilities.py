@@ -52,6 +52,7 @@ def make_blast_database(bconf, shellpath, pseudoscaffold):
         database_name = os.path.basename(pseudoscaffold)
     else:
         database_name = bconf['db_name']
+    database_type = bconf['dbtype']
     database_script = str(shellpath + '/make_blast_database.sh')
     database_cmd = ['bash', database_script, pseudoscaffold, database_name]
     database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

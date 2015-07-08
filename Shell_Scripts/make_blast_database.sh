@@ -20,5 +20,6 @@ fi
 
 INPUT_PSEUDOSCAFFOLD="$1"
 OUTPUT_DATABASE="$2"
+DB_TYPE="$3"
 
-makeblastdb -in ${INPUT_PSEUDOSCAFFOLD} -dbytpe nucl -out ${OUTPUT_DATABASE} -parse_seqids
+makeblastdb -in ${INPUT_PSEUDOSCAFFOLD} -dbytpe ${DB_TYPE} -out ${OUTPUT_DATABASE}
