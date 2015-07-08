@@ -3,6 +3,7 @@ outfmt = 5
 outfile = /Users/hoffmanp/Dropbox/Pseudoscaffold Annotator/temp/blast_results.xml
 evalue = 0.05
 max_seqs = 1
+override = False
 threshold = 0.04
 db_type = nucl
 
