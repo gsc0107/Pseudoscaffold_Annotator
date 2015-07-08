@@ -23,13 +23,12 @@ def opener(annotation, reference, pseudoscaffold):
 def tempdir_creator():
     """Create a temporary directory for partial annotation files and find the 'Shell_Scripts' directory"""
     rootpath = os.getcwd()
-    rootlist = str(os.listdir(rootpath))
-    if re.search('Shell_Scripts', rootlist):
+    if re.search('Shell_Scripts', str(os.listdir('.'))):
         shellpath = rootpath + '/Shell_Scripts'
     else:
         sys.exit("Cannot find 'Shell_Script' directory")
     tempdir = 'temp'
-    if re.search(tempdir, rootlist):
+    if re.search(tempdir, str(os.listdir('.'))):
         os.chdir(tempdir)
         temppath = os.getcwd()
     else:
