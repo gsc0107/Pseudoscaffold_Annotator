@@ -20,8 +20,8 @@ def opener(annotation, reference, pseudoscaffold):
 
 
 #   Create a temporary directory
-def tempdir_creator():
-    """Create a temporary directory for partial annotation files and find the 'Shell_Scripts' directory"""
+def tempdir_creator(pseudoscaffold):
+    """Create a temporary directory for partial annotation files, find the 'Shell_Scripts' directory, and find the path to the pseudoscaffold for making the blast database"""
     rootpath = os.getcwd()
     rootlist = str(os.listdir(rootpath))
     if re.search('Shell_Scripts', rootlist):
@@ -36,7 +36,8 @@ def tempdir_creator():
         os.mkdir(tempdir)
         os.chdir(tempdir)
         temppath = os.getcwd()
-    return(rootpath, tempdir, temppath, shellpath)
+    pseudopath = os.path.dirname(os.path.abspath(pseudoscaffold))
+    return(rootpath, tempdir, temppath, shellpath, pseudopath)
 
 
 #   Create a FASTA file of sequences defined by original annotation file

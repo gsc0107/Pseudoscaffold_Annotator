@@ -48,11 +48,11 @@ def blast_config_parser(config_file):
 
 
 #   Make a BLAST database
-def make_blast_database(bconf, shellpath, pseudoscaffold):
+def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath):
     """Make a BLAST database from the pseudoscaffold using a shell script and NCBI's BLAST+ excecutables"""
     import subprocess
     if bconf.get('db_name') == None:
-        database_name = os.path.basename(pseudoscaffold)
+        database_name = pseudopath + '/' os.path.basename(pseudoscaffold)
     else:
         database_name = bconf['db_name']
     database_type = bconf['db_type']
