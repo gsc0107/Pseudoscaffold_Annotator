@@ -85,6 +85,6 @@ class GFF(object):
         # start, end = pseudoscaffold_tools.length_gff(extracted_sequence, length_checker, self.pseudoscaffold)
         unique_sequences = pseudoscaffold_tools.sequence_finder(self.seq_list, self.unique)
         titles, starts, ends = blast_utilities.run_blast(self.bconf, unique_sequences, self.database_name, length_checker, self.temppath, self.pseudopath)
-        self.gff3_builder(outfile, titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker)
+        self.gff3_builder(self.outfile, titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker)
         #lock.release()
         return
