@@ -11,61 +11,73 @@ import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
 import gff_extracter
 
 
-#   Find the number of times this a contig shows up in original annotaiton file
-def find_length(unique, annotation):
-    """Creates a check for each part of the extraction process to ensure the correct amount of data is gathered from the original annotation file.
-        The unique argument is the contig to search for within the annotation file.
-        The annotation argument is the original annotaiton file"""
-    contig = re.compile(ur'(%s)'%(unique))
-    length = contig.findall(annotation)
-    length_checker = len(length)
-    print length_checker
-    return(length_checker)
+#   A class to handle making creating a GFF annotation while extracting information from a reference GFF annotation
+class gff_to_gff(object):
+    def __init__(self, seq_list, unique, reference, annotation, pseudoscaffold, outfile, temppath):
+        self.seq_list = seq_list
+        self.unique = unique
+        self.reference = reference
+        self.annotaiton = annotaiton
+        self.pseudoscaffold = pseudoscaffold
+        self.outfile = outfile
+        self.temppath = temppath
+        return
 
+    #   Find the number of times this a contig shows up in original annotaiton file
+    def find_length(self):
+        """Creates a check for each part of the extraction process to ensure the correct amount of data is gathered from the original annotation file.
+            The unique argument is the contig to search for within the annotation file.
+            The annotation argument is the original annotaiton file"""
+        contig = re.compile(ur'(%s)'%(self.unique))
+        length = contig.findall(self.annotation)
+        length_checker = len(length)
+        print length_checker
+        return(length_checker)
 
 #   Build the GFF file
-def gff3_builder(outfile, contig_pseudo, source, types, start, end, score, strand, phase, attributes, length_checker):
-    """Builds a GFF file from extracted components of original GFF file"""
-    gff= open(outfile, 'w')
-    print "opened " + outfile + " for writing"
-    for i in range(0, length_checker):
-        gff.write(str(contig_pseudo[i]))
-        gff.write('\t')
-        gff.write(str(source[i]))
-        gff.write('\t')
-        gff.write(str(types[i]))
-        gff.write('\t')
-        gff.write(str(start[i]))
-        gff.write('\t')
-        gff.write(str(end[i]))
-        gff.write('\t')
-        gff.write(str(score[i]))
-        gff.write('\t')
-        gff.write(str(strand[i]))
-        gff.write('\t')
-        gff.write(str(phase[i]))
-        gff.write('\t')
-        gff.write(str(attributes[i]))
-        gff.write('\n')
-    gff.close()
-    print("GFF file created")
+    def gff3_builder(self, contig_pseudo, sources, types, start, end, scores, strands, phases, attributes, length_checker):
+        """Builds a GFF file from extracted components of original GFF file"""
+        gff= open(self.outfile, 'w')
+        print "opened " + outfile + " for writing"
+        for i in range(0, length_checker):
+            gff.write(str(contig_pseudo[i]))
+            gff.write('\t')
+            gff.write(str(sources[i]))
+            gff.write('\t')
+            gff.write(str(types[i]))
+            gff.write('\t')
+            gff.write(str(start[i]))
+            gff.write('\t')
+            gff.write(str(end[i]))
+            gff.write('\t')
+            gff.write(str(scores[i]))
+            gff.write('\t')
+            gff.write(str(strands[i]))
+            gff.write('\t')
+            gff.write(str(phases[i]))
+            gff.write('\t')
+            gff.write(str(attributes[i]))
+            gff.write('\n')
+        gff.close()
+        print("GFF file created")
+        return
 
-
-#   Do the work here
-def gff_to_gff(lock, seq_list, unique, reference, annotation, pseudoscaffold, outfile, temppath):
-    """Extract information from original annotation file and match it up to sequences defined in pseudoscaffold. Then build a GFF annotation using this data for the pseudoscaffold"""
-#    lock.acquire()
-    if not os.getcwd() == temppath:
-        os.chdir(temppath)
-    length_checker = find_length(unique, annotation)
-    sources = gff_extracter.source_finder(unique, annotation, length_checker)
-    types = gff_extracter.type_finder(unique, annotation, length_checker)
-    scores = gff_extracter.score_finder(unique, annotation, length_checker)
-    strands = gff_extracter.strandedness(unique, annotation, length_checker)
-    phases = gff_extracter.phase_finder(unique, annotation, length_checker)
-    attributes = gff_extracter.attribute_finder(unique, annotation, length_checker)
-    extracted_sequence = pseudoscaffold_tools.sequence_extracter(seq_list, unique)
-    contig_pseudo = pseudoscaffold_tools.contig_finder(extracted_sequence, length_checker, pseudoscaffold)
-    start, end = pseudoscaffold_tools.length_gff(extracted_sequence, length_checker, pseudoscaffold)
-    gff3_builder(outfile, contig_pseudo, sources, types, start, end, scores, strands, phases, attributes, length_checker)
-#    lock.release()
+    #   Do the work here
+    def gff_to_gff(self):
+        """Extract information from original annotation file and match it up to sequences defined in pseudoscaffold. Then build a GFF annotation using this data for the pseudoscaffold"""
+        #lock.acquire()
+        if not os.getcwd() == self.temppath:
+            os.chdir(self.temppath)
+        length_checker = find_length(self.unique, self.annotation)
+        sources = gff_extracter.source_finder(self.unique, self.annotation, length_checker)
+        types = gff_extracter.type_finder(self.unique, self.annotation, length_checker)
+        scores = gff_extracter.score_finder(self.unique, self.annotation, length_checker)
+        strands = gff_extracter.strandedness(self.unique, self.annotation, length_checker)
+        phases = gff_extracter.phase_finder(self.unique, self.annotation, length_checker)
+        attributes = gff_extracter.attribute_finder(self.unique, self.annotation, length_checker)
+        extracted_sequence = pseudoscaffold_tools.sequence_extracter(self.seq_list, self.unique)
+        contig_pseudo = pseudoscaffold_tools.contig_finder(extracted_sequence, length_checker, pseudoscaffold)
+        start, end = pseudoscaffold_tools.length_gff(extracted_sequence, length_checker, self.pseudoscaffold)
+        gff3_builder(outfile, contig_pseudo, sources, types, start, end, scores, strands, phases, attributes, length_checker)
+        #lock.release()
+        return

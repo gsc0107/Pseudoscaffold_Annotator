@@ -61,6 +61,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath):
     else:
         sys.exit("Could determine neither file format of input nor desired format of output file. Please make sure extensions are typed out fully.")
 
+
 #   Do the work here
 def main():
     """Read arguments, determine which subroutine to run, and run it"""

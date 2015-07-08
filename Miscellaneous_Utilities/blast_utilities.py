@@ -41,8 +41,7 @@ def make_blast_config(args):
     except StopIteration:
         config = open(config_file, 'wb')
         blast_config.write(config)
-    test_reader = open(config_file).read()
-    print(test_reader)
+        print("BLAST configuration file can be found at " + config_file)
 
 
 #   Read BLAST config file
@@ -73,26 +72,29 @@ def run_blast(sequence, database_name):
 def blast_parser(xml):
     """Parse the BLAST results"""
     result_handle = open(xml)
+    threshold = 0.04
     blast_records = NCBIXML.parse(result_handle)
+    brecord = next(blast_records)
     try:
         while True:
-            blast_record = next(blast_records)
-        for alignment in blast_record.alignments:
-            for hsp in alignment.hsps:
-                if hsp.expect < threshold:
-                    print("Next hit")
-                    print hsp.sbjct_start
-                    print hsp.sbjct_end
-                    print("That's all folks")
+            brecord = next(blast_records)
     except StopIteration:
         pass
+    for alignment in blast_record.alignments:
+        for hsp in alignment.hsps:
+            if hsp.expect < threshold:
+                print("Next hit")
+                print aln.title
+                print hsp.sbjct_start
+                print hsp.sbjct_end
+                print("That's all folks")
 
 
 #   Find matches from BLAST search
-def blast_match():
-    import subprocess
-    matching_script = str(rootpath + 'Shell_Scripts/blast_database_sequence.sh')
-    matching_cmd = ['bash', matching_script]
-    matching_shell = subprocess.Popen(matching_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = matching_shell.communicate()
-    return(out, err)
+# def blast_match():
+#     import subprocess
+#     matching_script = str(rootpath + 'Shell_Scripts/blast_database_sequence.sh')
+#     matching_cmd = ['bash', matching_script]
+#     matching_shell = subprocess.Popen(matching_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#     out, err = matching_shell.communicate()
+#     return(out, err)
