@@ -86,7 +86,7 @@ def blast_search(bconf, unique_sequence, database_name, temppath):
         evalue=bconf['evalue'],
         max_target_seqs=bconf['max_seqs'],
         outfmt=bconf['outfmt'],
-        out=bconf['outfile'])
+        out=blast_out)
     print("Running BLAST search")
     blastn_cline()
     print("Finished searching")
