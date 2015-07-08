@@ -72,7 +72,7 @@ class GFF(object):
         print("Working on finding " + self.unique + " in the pseudoscaffold")
         if not os.getcwd() == self.temppath:
             os.chdir(self.temppath)
-        length_checker = self.find_length(self.unique, self.annotation)
+        length_checker = self.find_length()
         sources = gff_extracter.source_finder(self.unique, self.annotation, length_checker)
         types = gff_extracter.type_finder(self.unique, self.annotation, length_checker)
         scores = gff_extracter.score_finder(self.unique, self.annotation, length_checker)
