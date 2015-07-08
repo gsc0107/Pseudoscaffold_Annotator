@@ -38,7 +38,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     bconf = blast_utilities.blast_config_parser(args['cfile'])
     #   Make the BLAST databae
     database_name, out, err = blast_utilities.make_blast_database(bconf, shellpath, args['pseudoscaffold'], pseudopath)
-    #   Annotate the pseudocaffold given an input and output annotation format
+    #   Annotate the pseudoscaffold given an input and output annotation format
     if find_gff and create_gff:
         print "Found GFF file, making GFF file"
         import GFF_Utilities.gff_to_gff as gff_to_gff
@@ -96,7 +96,7 @@ def main():
         blast_utilities.make_blast_config(args)
     #   Run the 'annotate' subroutine
     elif args['command'] == 'annotate':
-        rootpath, tempdir, temppath, shellpath, pseudopath = annotation_utilities.tempdir_creator(args['pseudocaffold'])
+        rootpath, tempdir, temppath, shellpath, pseudopath = annotation_utilities.tempdir_creator(args['pseudoscaffold'])
         pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath)
         #annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
     #   Incorrect subroutine specified, display usage message
