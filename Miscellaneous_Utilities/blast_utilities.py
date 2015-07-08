@@ -50,6 +50,7 @@ def blast_config_parser(config_file):
     """Read the BLAST configuration file and pass arguments to BLAST functions"""
     import ConfigParser
     blast_config = ConfigParser.ConfigParser()
+    blast_config.read(config_file)
     pass
 
 
@@ -75,7 +76,7 @@ def blast_parser(xml):
     blast_records = NCBIXML.parse(result_handle)
     try:
         while True:
-            blast_record = blast_records.next()
+            blast_record = next(blast_records)
         for alignment in blast_record.alignments:
             for hsp in alignment.hsps:
                 if hsp.expect < threshold:

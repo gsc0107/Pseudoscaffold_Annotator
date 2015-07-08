@@ -41,10 +41,22 @@ def set_args():
         help="Evalue for BLAST search, default is 0.05")
     Blast_Arguments.add_argument('-m',
         '--max_seqs',
-        type=float,
-        default=5,
+        type=int,
+        default=1,
         metavar='MAX TARGET SEQUENCES',
-        help="Maximum number of target sequences for BLAST search, default is 5")
+        help="Maximum number of target sequences for BLAST search, default is 1")
+    Blast_Arguments.add_argument('-f',
+        '--outfmt',
+        type=int,
+        default=5,
+        metavar='OUTFORMAT',
+        help="Outformat for BLAST results, defaults to '5' (XML). Using any other format will require a separate parser and will be incompatible with 'Pseudoscaffold_Annotator'")
+    Blast_Arguments.add_argument('-t',
+        '--threshold',
+        type=float,
+        default=0.04,
+        metavar='THRESHOLD',
+        help="Threshold for parsing BLAST results, default is 0.04")
     Blast_Arguments.add_argument('-c',
         '--config',
         metavar='BLAST CONFIG FILE',

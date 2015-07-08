@@ -43,7 +43,7 @@ def pseudoscaffold_fixer(pseudo, pseudo_indecies, fixed):
 #   Print closing message
 def finished(outfile):
     """Print a closing message"""
-    sys.displayhook("Fixed pseudoscaffold can be found at " os.getcwd() + "/" + outfile)
+    sys.displayhook("Fixed pseudoscaffold can be found at " + os.getcwd() + "/" + outfile)
     sys.exit(0)
 
 

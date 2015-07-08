@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 #   Import required modules from standard Python library
-import subprocess
 import os
 import sys
 import re
@@ -19,38 +18,14 @@ gff = re.compile(ur'(.*\.gff$)')
 bed = re.compile(ur'(.*\.bed$)')
 
 
-#   Open the files
-def opener(annotation, reference, pseudoscaffold):
-    """Open the reference annotation, reference sequence, and pseudoscaffold for working"""
-    annotations = open(annotation).read()
-    references = open(reference).read()
-    pseudoscaffolds = open(pseudoscaffold).read()
-    print("Opened all files")
-    return(annotations, references, pseudoscaffolds)
-
-
-#   Create a FASTA file of sequences defined by original annotation file
-def extraction_sh(reference, annotation, rootpath):
-    """Extract the sequences defined by the annotation file from the refernce fasta file"""
-    tmp = 'pseudoscaffold_annotator_temp.fasta'
-    print("Searching for original sequences using 'extraction.sh'")
-    extraction_script = str(rootpath + '/Shell_Scripts/extraction.sh')
-    extraction_cmd = ['bash', extraction_script, reference, annotation, tmp]
-    extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = extraction_shell.communicate()
-    seq_list = open(tmp).read()
-    os.remove(tmp)
-    return(seq_list)
-
-
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
 def pseudoscaffold_annotator(args, temppath, rootpath):
     """Start annotating the pseudoscaffold"""
     if not os.getcwd() == temppath:
         os.chdir(temppath)
-    seq_list = extraction_sh(args['reference'], args['annotation'], rootpath)
-    annotation, reference, pseudoscaffold = opener(args['annotation'], args['reference'], args['pseudoscaffold'])
+    seq_list = annotation_utilities.extraction_sh(args['reference'], args['annotation'], rootpath)
+    annotation, reference, pseudoscaffold = annotation_utilities.opener(args['annotation'], args['reference'], args['pseudoscaffold'])
     find_gff, find_bed = annotation_utilities.extension_searcher(gff, bed, args['annotation'])
     create_gff, create_bed = annotation_utilities.extension_creator(gff, bed, args['outfile'])
     if find_gff and create_gff:
@@ -99,7 +74,7 @@ def main():
     #   Run the 'fix' subroutine
     if args['command'] == 'fix':
         import Pseudoscaffold_Utilities.pseudoscaffold_fixer as pseudoscaffold_fixer
-        pseudoscaffold_fixer.main(args['pseudoscaffold'], args['pseudoscaffold_fixer'])
+        pseudoscaffold_fixer.main(args['pseudoscaffold'], args['new_pseudoscaffold'])
     #   Run the 'blast-config' subroutine
     elif args['command'] == 'blast-config':
         import Miscellaneous_Utilities.blast_utilities as blast_utilities
