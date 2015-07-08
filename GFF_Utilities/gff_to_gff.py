@@ -69,7 +69,7 @@ class GFF(object):
     def gff_to_gff(self):
         """Extract information from original annotation file and match it up to sequences defined in pseudoscaffold. Then build a GFF annotation using this data for the pseudoscaffold"""
         #lock.acquire()
-        print("Working on finding " + unique + " in the pseudoscaffold")
+        print("Working on finding " + self.unique + " in the pseudoscaffold")
         if not os.getcwd() == self.temppath:
             os.chdir(self.temppath)
         length_checker = find_length(self.unique, self.annotation)
