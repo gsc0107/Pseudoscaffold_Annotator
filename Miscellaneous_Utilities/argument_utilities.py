@@ -83,7 +83,7 @@ def set_args():
         dest='db_type',
         default='nucl',
         metavar='DATABASE TYPE',
-        choices=['nucl', 'prot']
+        choices=['nucl', 'prot'],
         help="Type of BLAST database to be made, defaults to 'nucl'")
     Blast_Arguments.add_argument('-v',
         '--override',
