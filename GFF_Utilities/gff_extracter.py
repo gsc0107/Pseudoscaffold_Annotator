@@ -84,7 +84,7 @@ def attribute_finder(unique, annotation, length_checker):
     attribute_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+[+\-\.]\s+[\.012]\s+(.*)'%unique)
     attributes = attribute_searcher.findall(annotation)
     if len(attributes) == length_checker:
-        print("All attributes found")
+        print("All 'attributes' found")
         return(attributes)
     else:
         sys.exit("Failed to collect all attributes from original annotation file")

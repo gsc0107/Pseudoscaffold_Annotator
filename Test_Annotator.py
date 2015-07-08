@@ -37,7 +37,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     #   Read the BLAST config file
     bconf = blast_utilities.blast_config_parser(args['cfile'])
     #   Make the BLAST databae
-    database_name, out, err = blast_utilities.make_blast_database(bconf, shellpath, args['pseudoscaffold'], pseudopath)
+    database_name, out, err = blast_utilities.make_blast_database(bconf, shellpath, args['pseudoscaffold'], pseudopath, temppath)
     #   Annotate the pseudoscaffold given an input and output annotation format
     if find_gff and create_gff:
         print "Found GFF file, making GFF file"
@@ -46,7 +46,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
         contig_original, length_final = gff_extracter.contig_extracter(annotation)
         for unique in contig_original:
             out = str(unique + '_out.gff')
-            gff_annotate = gff_to_gff.GFF(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name)
+            gff_annotate = gff_to_gff.GFF(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
             gff_annotate.gff_to_gff()
         # if __name__ == '__main__':
         #     lock = Lock()

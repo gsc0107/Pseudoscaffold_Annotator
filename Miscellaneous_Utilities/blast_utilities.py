@@ -48,11 +48,12 @@ def blast_config_parser(config_file):
 
 
 #   Make a BLAST database
-def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath):
+def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath, temppath):
     """Make a BLAST database from the pseudoscaffold using a shell script and NCBI's BLAST+ excecutables"""
     import subprocess
+    os.chdir(pseudopath)
     if bconf.get('db_name') == None:
-        database_name = pseudopath + '/' + os.path.basename(pseudoscaffold)
+        database_name = os.path.basename(pseudoscaffold)
     else:
         database_name = bconf['db_name']
     database_type = bconf['db_type']
@@ -70,12 +71,14 @@ def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath):
     database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = database_shell.communicate()
     print("Finished making BLAST database")
+    os.chdir(temppath)
     return(database_name, out, err)
 
 
 #   Define the BLAST program
-def blast_search(bconf, unique_sequence, database_name, temppath):
+def blast_search(bconf, unique_sequence, database_name, temppath, pseudopath):
     """Run BLASTN to find sequences within the pseudoscaffold"""
+    os.chdir(pseudopath)
     if bconf.get('outfile') == None:
         blast_out = temppath + '/temp.xml'
     else:
@@ -90,6 +93,7 @@ def blast_search(bconf, unique_sequence, database_name, temppath):
     print("Running BLAST search")
     blastn_cline()
     print("Finished searching")
+    os.chdir(temppath)
     return(blast_out)
 
 

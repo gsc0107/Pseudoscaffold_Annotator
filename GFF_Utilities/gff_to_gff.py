@@ -14,7 +14,7 @@ import gff_extracter
 
 #   A class to handle making creating a GFF annotation while extracting information from a reference GFF annotation
 class GFF(object):
-    def __init__(self, seq_list, unique, reference, annotation, pseudoscaffold, outfile, temppath, bconf, database_name):
+    def __init__(self, seq_list, unique, reference, annotation, pseudoscaffold, outfile, temppath, bconf, database_name, pseudopath):
         self.seq_list = seq_list
         self.unique = unique
         self.reference = reference
@@ -24,6 +24,7 @@ class GFF(object):
         self.temppath = temppath
         self.bconf = bconf
         self.database_name = database_name
+        self.pseudopath = pseudopath
         return
 
     #   Find the number of times this a contig shows up in original annotation file
@@ -83,7 +84,7 @@ class GFF(object):
         # contig_pseudo = pseudoscaffold_tools.contig_finder(extracted_sequence, length_checker, pseudoscaffold)
         # start, end = pseudoscaffold_tools.length_gff(extracted_sequence, length_checker, self.pseudoscaffold)
         unique_sequences = pseudoscaffold_tools.sequence_finder(self.seq_list, self.unique)
-        titles, starts, ends = blast_utilities.run_blast(self.bconf, unique_sequences, self.database_name, length_checker, self.temppath)
+        titles, starts, ends = blast_utilities.run_blast(self.bconf, unique_sequences, self.database_name, length_checker, self.temppath, self.pseudopath)
         self.gff3_builder(outfile, titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker)
         #lock.release()
         return
