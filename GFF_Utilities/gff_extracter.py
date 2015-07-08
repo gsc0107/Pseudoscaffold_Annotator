@@ -81,7 +81,7 @@ def phase_finder(unique, annotation, length_checker):
 #       Find any attributes (column 9) from the GFF file
 def attribute_finder(unique, annotation, length_checker):
     """Find the attribute information from the original annotation file."""
-    attribute_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+[+\-\.]\s+[\.012]\s+(.*)'%unique))
+    attribute_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+[+\-\.]\s+[\.012]\s+(.*)'%unique)
     attributes = attribute_searcher.findall(annotation)
     if len(attributes) == length_checker:
         print("All attributes found")
