@@ -38,6 +38,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath):
     bconf = blast_utilities.blast_config_parser(args['cfile'])
     #   Make the BLAST databae
     database_name, out, err = blast_utilities.make_blast_database(bconf, shellpath, pseudoscaffold)
+    sys.exit(0)
     #   Annotate the pseudocaffold given an input and output annotation format
     if find_gff and create_gff:
         print "Found GFF file, making GFF file"

@@ -67,8 +67,7 @@ def make_blast_database(bconf, shellpath, pseudoscaffold):
     database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = database_shell.communicate()
     print("Finished making BLAST database")
-    #return(database_name, out, err)
-    sys.exit(0)
+    return(database_name, out, err)
 
 
 #   Define the BLAST program
