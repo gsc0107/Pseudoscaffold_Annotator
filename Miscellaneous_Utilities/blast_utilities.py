@@ -54,15 +54,20 @@ def make_blast_database(bconf, shellpath, pseudoscaffold):
     else:
         database_name = bconf['db_name']
     database_type = bconf['db_type']
+    print database_name
     if database_type == 'nucl':
         ext = '.nin'
     elif database_type == 'prot':
         ext = '.pin'
     else:
         sys.exit("Incorrect BLAST database type specified")
+    print database_type
+    print ext
     database_script = str(shellpath + '/make_blast_database.sh')
+    print database_script
     print("Making BLAST database")
-    database_cmd = ['bash', database_script, pseudoscaffold, db_name, db_type, ext]
+    database_cmd = ['bash', database_script, pseudoscaffold, database_name, database_type, ext]
+    print database_cmd
     database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = database_shell.communicate()
     print("Finished making BLAST database")
