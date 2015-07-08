@@ -24,10 +24,10 @@ DB_TYPE="$3"
 EXT="$4"
 OVERRIDE="$5"
 
-if [ "${OVERRIDE}" == "False" ] && [[ -f "${OUTPUT_DATABASE}""${EXT}" ]]
+if [[ -f "${OUTPUT_DATABASE}""${EXT}" ]] && [ "${OVERRIDE}" == "False" ]
 then
     echo "Database exits and override is set to false" >&2
     exit 0
 else
-    makeblastdb -in ${INPUT_PSEUDOSCAFFOLD} -dbytpe ${DB_TYPE} -out ${OUTPUT_DATABASE}
+    makeblastdb -in "${INPUT_PSEUDOSCAFFOLD}" -dbytpe "${DB_TYPE}" -out "${OUTPUT_DATABASE}"
 fi

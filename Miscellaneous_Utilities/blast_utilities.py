@@ -53,7 +53,8 @@ def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath, temppath):
     import subprocess
     os.chdir(pseudopath)
     if bconf.get('db_name') == None:
-        database_name = os.path.basename(pseudoscaffold)
+        base = os.path.basename(pseudoscaffold)
+        database_name = base.split('.')[0]
     else:
         database_name = bconf['db_name']
     database_type = bconf['db_type']
@@ -63,7 +64,6 @@ def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath, temppath):
         ext = '.pin'
     else:
         sys.exit("Incorrect BLAST database type specified")
-    print database_type
     override = bconf['override']
     database_script = str(shellpath + '/make_blast_database.sh')
     print("Making BLAST database")
