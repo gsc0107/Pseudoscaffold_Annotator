@@ -74,7 +74,7 @@ def make_blast_database(bconf, shellpath, pseudoscaffold):
 
 
 #   Define the BLAST program
-def blast_search(bconf, unique_sequence, database_name):
+def blast_search(bconf, unique_sequence, database_name, temppath):
     """Run BLASTN to find sequences within the pseudoscaffold"""
     if bconf.get('outfile') == None:
         blast_out = temppath + '/temp.xml'
