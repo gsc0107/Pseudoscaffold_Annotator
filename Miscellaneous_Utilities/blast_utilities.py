@@ -135,8 +135,8 @@ def title_fixer(titles):
     return(fixed_titles)
 
 #   Run the BLAST search and parse the results
-def run_blast(bconf, unique_sequence, database_name, length_checker, temppath):
-    blast_out = blast_search(bconf, unique_sequence, database_name, temppath)
+def run_blast(bconf, unique_sequence, database_name, length_checker, temppath, pseudopath):
+    blast_out = blast_search(bconf, unique_sequence, database_name, temppath, pseudopath)
     titles, starts, ends = blast_parser(bconf, blast_out)
     fixed_titles = title_fixer(titles)
     if not len(fixed_titles) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
