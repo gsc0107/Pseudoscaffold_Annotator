@@ -72,7 +72,7 @@ class GFF(object):
         print("Working on finding " + self.unique + " in the pseudoscaffold")
         if not os.getcwd() == self.temppath:
             os.chdir(self.temppath)
-        length_checker = find_length(self.unique, self.annotation)
+        length_checker = self.find_length(self.unique, self.annotation)
         sources = gff_extracter.source_finder(self.unique, self.annotation, length_checker)
         types = gff_extracter.type_finder(self.unique, self.annotation, length_checker)
         scores = gff_extracter.score_finder(self.unique, self.annotation, length_checker)
@@ -84,6 +84,6 @@ class GFF(object):
         # start, end = pseudoscaffold_tools.length_gff(extracted_sequence, length_checker, self.pseudoscaffold)
         unique_sequences = pseudoscaffold_tools.sequence_finder(self.seq_list, self.unique)
         titles, starts, ends = blast_utilities.run_blast(self.bconf, unique_sequences, self.database_name, length_checker)
-        gff3_builder(outfile, titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker)
+        self.gff3_builder(outfile, titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker)
         #lock.release()
         return
