@@ -42,7 +42,7 @@ class GFF(object):
     def gff3_builder(self, titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker):
         """Builds a GFF file from extracted components of original GFF file"""
         gff= open(self.outfile, 'w')
-        print("Opened " + outfile + " for writing")
+        print("Opened " + self.outfile + " for writing")
         for i in range(0, length_checker):
             gff.write(str(titles[i]))
             gff.write('\t')
