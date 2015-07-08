@@ -63,10 +63,11 @@ def make_blast_database(bconf, shellpath, pseudoscaffold):
         sys.exit("Incorrect BLAST database type specified")
     print database_type
     print ext
+    override = bconf['override']
     database_script = str(shellpath + '/make_blast_database.sh')
     print database_script
     print("Making BLAST database")
-    database_cmd = ['bash', database_script, pseudoscaffold, database_name, database_type, ext]
+    database_cmd = ['bash', database_script, pseudoscaffold, database_name, database_type, ext, override]
     print database_cmd
     database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = database_shell.communicate()

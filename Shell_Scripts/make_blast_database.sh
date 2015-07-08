@@ -18,14 +18,16 @@ else
     exit 1
 fi
 
-echo "$@" >> args.txt
-echo "$#" >> args.txt
+INPUT_PSEUDOSCAFFOLD="$1"
+OUTPUT_DATABASE="$2"
+DB_TYPE="$3"
+EXT="$4"
+OVERRIDE="$5"
 
-exit 0
-
-#INPUT_PSEUDOSCAFFOLD="$1"
-#OUTPUT_DATABASE="$2"
-#DB_TYPE="$3"
-#EXT="$4"
-
-#makeblastdb -in ${INPUT_PSEUDOSCAFFOLD} -dbytpe ${DB_TYPE} -out ${OUTPUT_DATABASE}
+if [ "${OVERRIDE}" == "False" ] && [[ -f "${OUTPUT_DATABASE}""${EXT}" ]]
+then
+    echo "Database exits and override is set to false"
+    exit 0
+else
+    makeblastdb -in ${INPUT_PSEUDOSCAFFOLD} -dbytpe ${DB_TYPE} -out ${OUTPUT_DATABASE}
+fi
