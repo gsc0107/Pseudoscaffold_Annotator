@@ -72,6 +72,7 @@ def annotation_builder(rootpath, tempdir, temppath, outfile):
 #   Find the extension of the given annotation file
 def extension_searcher(gff, bed, annotation):
     """Figure out the type (BED or GFF) of annotation file we're working with"""
+    print("Figuring out what kind of annotation file was given")
     find_gff = gff.search(annotation)
     find_bed = bed.search(annotation)
     return(find_gff, find_bed)
@@ -80,6 +81,7 @@ def extension_searcher(gff, bed, annotation):
 #   Find the desired extension of the pseudoscaffold annotation file
 def extension_creator(gff, bed, outfile):
     """Figure out the desired type (BED or GFF) of annotation file"""
+    print("Figuring out what kind of annotation file is desired")
     create_gff = gff.search(outfile)
     create_bed = bed.search(outfile)
     return(create_gff, create_bed)

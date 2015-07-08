@@ -41,7 +41,7 @@ class GFF(object):
     def gff3_builder(self, titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker):
         """Builds a GFF file from extracted components of original GFF file"""
         gff= open(self.outfile, 'w')
-        print "opened " + outfile + " for writing"
+        print("Opened " + outfile + " for writing")
         for i in range(0, length_checker):
             gff.write(str(titles[i]))
             gff.write('\t')
@@ -69,6 +69,7 @@ class GFF(object):
     def gff_to_gff(self):
         """Extract information from original annotation file and match it up to sequences defined in pseudoscaffold. Then build a GFF annotation using this data for the pseudoscaffold"""
         #lock.acquire()
+        print("Working on finding " + unique + " in the pseudoscaffold")
         if not os.getcwd() == self.temppath:
             os.chdir(self.temppath)
         length_checker = find_length(self.unique, self.annotation)

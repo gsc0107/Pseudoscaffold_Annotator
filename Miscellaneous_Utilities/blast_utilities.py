@@ -41,6 +41,7 @@ def blast_config_parser(config_file):
     blast_config = ConfigParser.ConfigParser()
     blast_config.read(config_file)
     bconf = dict(blast_config.items('BlastConfiguration'))
+    print("BLAST configuration file has been read")
     return(bconf)
 
 
@@ -61,9 +62,11 @@ def make_blast_database(bconf, shellpath, pseudoscaffold):
         sys.exit("Incorrect BLAST database type specified")
     database_script = str(shellpath + '/make_blast_database.sh')
     database_args = [pseudoscaffold, database_name, database_type, ext]
+    print("Making BLAST database")
     database_cmd = ['bash', database_script, str(database_args)]
     database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = database_shell.communicate()
+    print("Finished making BLAST database")
     #return(database_name, out, err)
     sys.exit(0)
 
@@ -79,7 +82,9 @@ def blast_search(bconf, unique_sequence, database_name):
         max_target_seqs=bconf['max_seqs'],
         outfmt=bconf['outfmt'],
         out=bconf['outfile'])
+    print("Running BLAST search")
     blastn_cline()
+    print("Finished searching")
     return(blast_out)
 
 
@@ -92,6 +97,7 @@ def blast_parser(bconf, blast_out):
     starts = list()
     ends = list()
     blast_records = NCBIXML.parse(result_handle)
+    print("Parsing BLAST results")
     try:
         while True:
             brecord = next(blast_records)
@@ -103,17 +109,20 @@ def blast_parser(bconf, blast_out):
                         ends.append(hsp.sbjct_end)
                     break
     except StopIteration:
+        print("Finished parsing results")
         return(titles, starts, ends)
 
 
 #   Fix the titles of the hits, because NCBI's XML format is weird
 def title_fixer(titles):
+    print("Fixing titles from parsing BLAST results")
     fixed_titles = list()
     for i in range(len(titles)):
         title = titles[i]
         split_title = title.split()
         pseudo_contig = split_title[0]
         fixed_titles.append(pseudo_contig)
+    print("Finished fixing titles")
     return(fixed_titles)
 
 #   Run the BLAST search and parse the results
