@@ -1,0 +1,7 @@
+[BlastConfiguration]
+outfmt = 5
+outfile = /Users/hoffmanp/Dropbox/Pseudoscaffold Annotator/temp/blast_results.xml
+evalue = 0.05
+max_seqs = 1
+threshold = 0.04
+
