@@ -47,6 +47,23 @@ def blast_config_parser(config_file):
     return(bconf)
 
 
+#   Determine whether or not we're making a new BLAST database
+def find_database(database_name, ext, override):
+    """Determine if the resources are going to be spent making a BLAST database"""
+    if os.path.isfile(database_name + ext):
+        print("Existing BLAST database found")
+        if override:
+            print("Override set to 'True'")
+            makebool = True
+        else:
+            print ("Override set to 'False'")
+            makebool = False
+    else:
+        print("Could not find existing BLAST database")
+        makebool = True
+    return makebool
+
+
 #   Make a BLAST database
 def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath, temppath):
     """Make a BLAST database from the pseudoscaffold using a shell script and NCBI's BLAST+ excecutables"""
@@ -65,12 +82,16 @@ def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath, temppath):
     else:
         sys.exit("Incorrect BLAST database type specified")
     override = bconf['override']
-    database_script = str(shellpath + '/make_blast_database.sh')
-    print("Making BLAST database")
-    database_cmd = ['bash', database_script, pseudoscaffold, database_name, database_type, ext, override]
-    database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = database_shell.communicate()
-    print("Finished making BLAST database")
+    makebool = find_database(database_name, ext, override)
+    if makebool:
+        database_script = str(shellpath + '/make_blast_database.sh')
+        print("Making BLAST database")
+        database_cmd = ['bash', database_script, pseudoscaffold, database_name, database_type]
+        database_shell = subprocess.Popen(database_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = database_shell.communicate()
+        print("Finished making BLAST database")
+    else:
+        out, err = 0, 0
     os.chdir(temppath)
     return(database_name, out, err)
 
