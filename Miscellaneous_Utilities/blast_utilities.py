@@ -52,7 +52,7 @@ def find_database(database_name, ext, override):
     """Determine if the resources are going to be spent making a BLAST database"""
     if os.path.isfile(database_name + ext):
         print("Existing BLAST database found")
-        if override:
+        if override == 'True':
             print("Override set to 'True'")
             makebool = True
         else:
