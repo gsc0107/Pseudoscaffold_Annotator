@@ -22,4 +22,4 @@ INPUT_PSEUDOSCAFFOLD="$1"
 OUTPUT_DATABASE="$2"
 DB_TYPE="$3"
 
-makeblastdb -in "${INPUT_PSEUDOSCAFFOLD}" -dbytpe "${DB_TYPE}" -out "${OUTPUT_DATABASE}"
+makeblastdb -dbytpe "${DB_TYPE}" -in "${INPUT_PSEUDOSCAFFOLD}" -out "${OUTPUT_DATABASE}"
