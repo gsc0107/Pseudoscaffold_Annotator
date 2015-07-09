@@ -20,6 +20,11 @@ def sequence_finder(seq_list, unique):
     return(specific_filename)
 
 
+#       Change start and end positions to match BED format
+def length_bed(extracted_sequence, length_checker, pseudoscaffold):
+    """ Not yet implemented"""
+    pass
+
 #       Find the pseudoscaffold ID where the sequences are stored
 # def contig_finder(extracted_sequence, length_checker, pseudoscaffold):
 #     """Find the comparitive contigs for each sequence within pseudoscaffold.
@@ -56,9 +61,3 @@ def sequence_finder(seq_list, unique):
 #         return(start, end)
 #     else:
 #         sys.exit("Failed to calculate all lengths")
-
-
-#       Calculate start and end posiotns within the pseudoscaffold for a BED file
-def length_bed(extracted_sequence, length_checker, pseudoscaffold):
-    """ Not yet implemented"""
-    pass
