@@ -9,6 +9,7 @@ import sys
 #      Extract the sequences defined by the original annotation file
 def sequence_finder(seq_list, unique):
     """Find the sequences pertaining to the unique contig"""
+    print("Searching for sequences unique to " + unique)
     sequence = re.compile(ur'(>%s.*\n[ACTGN]+)'%(unique))
     finder = sequence.findall(seq_list)
     specific_filename = str(unique+'_sequence.fasta')
@@ -17,6 +18,7 @@ def sequence_finder(seq_list, unique):
         specific_sequences.write(finder[i])
         specific_sequences.write("\n")
     specific_sequences.close()
+    print("Found unique sequences")
     return(specific_filename)
 
 
