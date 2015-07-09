@@ -46,7 +46,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
         contig_original, length_final = gff_extracter.contig_extracter(annotation)
         for unique in contig_original:
             out = str(unique + '_out.gff')
-            gff_annotate = gff_to_gff.GFF(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
+            gff_annotate = gff_to_gff.gffGFF(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
             gff_annotate.gff_to_gff()
         # if __name__ == '__main__':
         #     lock = Lock()

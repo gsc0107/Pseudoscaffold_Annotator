@@ -13,7 +13,7 @@ import gff_extracter
 
 
 #   A class to handle making creating a GFF annotation while extracting information from a reference GFF annotation
-class GFF(object):
+class gffGFF(object):
     def __init__(self, seq_list, unique, reference, annotation, pseudoscaffold, outfile, temppath, bconf, database_name, pseudopath):
         self.seq_list = seq_list
         self.unique = unique
