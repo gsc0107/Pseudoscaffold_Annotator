@@ -104,8 +104,9 @@ def blast_search(bconf, unique_sequence, database_name, temppath, pseudopath, un
         blast_out = temppath + '/' + unique + '_temp.xml'
     else:
         blast_out = bconf['outfile']
+    unique_query = temppath + '/' + unique_sequence
     blastn_cline = NcbiblastnCommandline(
-        query=unique_sequence,
+        query=unique_query,
         db=database_name,
         evalue=bconf['evalue'],
         max_target_seqs=bconf['max_seqs'],
