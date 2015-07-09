@@ -91,7 +91,7 @@ def set_args():
         dest='override',
         default=False,
         metavar='OVERRIDE',
-        choices=['True', 'False'],
+        choices=[True, False],
         help="Override a blast database if found? Defaults to 'False'")
     Blast_Arguments.add_argument('-c',
         '--config',
