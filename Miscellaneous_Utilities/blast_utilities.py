@@ -93,8 +93,6 @@ def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath, temppath):
     else:
         out, err = 0, 0
     os.chdir(temppath)
-    print out
-    print err
     return(database_name, out, err)
 
 
@@ -147,6 +145,7 @@ def blast_parser(bconf, blast_out):
 
 #   Fix the titles of the hits, because NCBI's XML format is weird
 def title_fixer(titles):
+    """Remove the excess informaiton from the 'title' field from the XML resutls"""
     print("Fixing titles from parsing BLAST results")
     fixed_titles = list()
     for i in range(len(titles)):
@@ -159,6 +158,7 @@ def title_fixer(titles):
 
 #   Run the BLAST search and parse the results
 def run_blast(bconf, unique_sequence, database_name, length_checker, temppath, pseudopath, unique):
+    """Perform the BLAST search and parse the results"""
     blast_out = blast_search(bconf, unique_sequence, database_name, temppath, pseudopath, unique)
     titles, starts, ends = blast_parser(bconf, blast_out)
     fixed_titles = title_fixer(titles)
@@ -166,12 +166,3 @@ def run_blast(bconf, unique_sequence, database_name, length_checker, temppath, p
         sys.exit("Failed to find all sequences in BLAST search")
     else:
         return(fixed_titles, starts, ends)
-
-#   Find matches from BLAST search
-# def blast_match():
-#     import subprocess
-#     matching_script = str(shellpath + '/blast_database_sequence.sh')
-#     matching_cmd = ['bash', matching_script]
-#     matching_shell = subprocess.Popen(matching_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#     out, err = matching_shell.communicate()
-#     return(out, err)
