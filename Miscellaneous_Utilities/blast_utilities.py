@@ -93,6 +93,8 @@ def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath, temppath):
     else:
         out, err = 0, 0
     os.chdir(temppath)
+    print out
+    print err
     return(database_name, out, err)
 
 
