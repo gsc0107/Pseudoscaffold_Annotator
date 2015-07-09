@@ -43,6 +43,7 @@ def blast_config_parser(config_file):
     blast_config = ConfigParser.ConfigParser()
     blast_config.read(config_file)
     bconf = dict(blast_config.items('BlastConfiguration'))
+    bconf['override'] = blast_config.getboolean('BlastConfiguration', 'override')
     print("BLAST configuration file has been read")
     return(bconf)
 
@@ -52,7 +53,7 @@ def find_database(database_name, ext, override):
     """Determine if the resources are going to be spent making a BLAST database"""
     if os.path.isfile(database_name + ext):
         print("Existing BLAST database found")
-        if override == 'True':
+        if override:
             print("Override set to 'True'")
             makebool = True
         else:
