@@ -194,7 +194,7 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence):
         missing_iters = list(set(range(1, length_checker)).difference(iterations))
         #   Get the informaiton for the full gene
         gene_info = list(extracted_info[0])
-        gene_def = re.search(ur'<Iteration>\s{3}<Iteration_iter-num>1</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>([\w\d:-]*)', blast_out).groups()[0]
+        gene_def = re.search(ur'<Iteration>\s{3}<Iteration_iter-num>1</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>([\w\d:-]*)', blast_xml).groups()[0]
         gene_info.append(gene_def)
         #   Get the definintion start and ends of the gene
         gene_info = gene_info + gene_info[4].split(':')[1].split('-')
