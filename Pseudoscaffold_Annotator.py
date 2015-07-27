@@ -83,7 +83,7 @@ def main():
     #   No arguments give, display usage message
     if not sys.argv[1:]:
         argument_utilities.Usage()
-        exit(1)
+        sys.exit(1)
     #   Create a dictionary of arguments
     args = vars(argument_utilities.set_args())
     print(args)
@@ -100,10 +100,10 @@ def main():
     elif args['command'] == 'annotate':
         rootpath, tempdir, temppath, shellpath, pseudopath = annotation_utilities.tempdir_creator(args['pseudoscaffold'])
         pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath)
+        annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
     #   Incorrect subroutine specified, display usage message
     else:
         argument_utilities.Usage()
-        exit(1)
-    annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
+        sys.exit(1)
 
 main()
