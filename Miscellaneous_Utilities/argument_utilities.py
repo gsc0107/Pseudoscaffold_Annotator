@@ -35,34 +35,6 @@ def set_args():
         help="Name of fixed pseudoscaffold. Please put full file name, inlcuding extension. Default is 'fixed_pseudoscaffolds.fasta'")
     #   Add parser for setting BLAST defaults
     Blast_Arguments = Sub_Args.add_parser('blast-config', help='Set defaults for BLAST to be used by the annotator')
-    Blast_Arguments.add_argument('-e',
-        '--evalue',
-        type=float,
-        dest='evalue',
-        default=0.05,
-        metavar='EVALUE',
-        help="Evalue for BLAST search, default is 0.05")
-    Blast_Arguments.add_argument('-m',
-        '--max-seqs',
-        type=int,
-        dest='max_seqs',
-        default=1,
-        metavar='MAX TARGET SEQUENCES',
-        help="Maximum number of target sequences for BLAST search, default is 1")
-    Blast_Arguments.add_argument('-f',
-        '--outfmt',
-        type=int,
-        dest='outfmt',
-        default=5,
-        metavar='OUTFORMAT',
-        help="Outformat for BLAST results, defaults to '5' (XML). Using any other format will require a separate parser and will be incompatible with 'Pseudoscaffold_Annotator'")
-    Blast_Arguments.add_argument('-t',
-        '--threshold',
-        type=float,
-        dest='threshold',
-        default=0.04,
-        metavar='THRESHOLD',
-        help="Threshold for parsing BLAST results, default is 0.04")
     Blast_Arguments.add_argument('-o',
         '--outfile',
         type=str,
@@ -77,14 +49,6 @@ def set_args():
         default=None,
         metavar='DATABASE NAME',
         help='Name of BLAST database, defaults to name of pseudoscaffold')
-    Blast_Arguments.add_argument('-b',
-        '--database-type',
-        type=str,
-        dest='db_type',
-        default='nucl',
-        metavar='DATABASE TYPE',
-        choices=['nucl', 'prot'],
-        help="Type of BLAST database to be made, defaults to 'nucl'")
     Blast_Arguments.add_argument('-v',
         '--override',
         type=bool,

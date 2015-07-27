@@ -69,9 +69,11 @@ def blast_config_parser(config_file):
 
 
 #   Determine whether or not we're making a new BLAST database
-def find_database(database_name, ext, override):
+def find_database(database_name, override):
     """Determine if the resources are going to be spent making a BLAST database"""
     #   See if the file exists first
+    #   The extension associated with the BLAST database
+    ext = '.nin'
     if os.path.isfile(database_name + ext):
         print("Existing BLAST database found")
         #   If so, can we override?
@@ -102,19 +104,12 @@ def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath, temppath):
     #   Nope, we have
     else:
         database_name = bconf['db_name']
-    #   What kind of BLAST database do we have?
-    database_type = bconf['db_type']
-    #   What is the extension associated with the BLAST database?
-    if database_type == 'nucl':
-        ext = '.nin'
-    elif database_type == 'prot':
-        ext = '.pin'
     else:
         sys.exit("Incorrect BLAST database type specified")
     #   What was the override command?
     override = bconf['override']
     #   Do we make or not?
-    makebool = find_database(database_name, ext, override)
+    makebool = find_database(database_name, override)
     #   Yes
     if makebool:
         database_script = str(shellpath + '/make_blast_database.sh')
@@ -147,9 +142,9 @@ def blast_search(bconf, unique_sequence, database_name, temppath, pseudopath, un
     blastn_cline = NcbiblastnCommandline(
         query=unique_query,
         db=database_name,
-        evalue=bconf['evalue'],
-        max_target_seqs=bconf['max_seqs'],
-        outfmt=bconf['outfmt'],
+        evalue=0.05,
+        max_target_seqs=1,
+        outfmt=5,
         out=blast_out)
     print("Running BLAST search")
     #   Run the BLAST search
