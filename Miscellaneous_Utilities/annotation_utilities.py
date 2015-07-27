@@ -61,13 +61,19 @@ def annotation_builder(rootpath, tempdir, temppath, outfile):
         os.chdir(temppath)
     file_list = str(os.listdir('.'))
     extension = outfile.split('.')[-1]
-    file_finder = re.compile(ur'([a-zA-Z0-9-_\.]*)%s'%(extension))
+    file_finder = re.compile(ur'([a-zA-Z0-9-_\.]*%s)'%(extension))
     annotation_parts = file_finder.findall(file_list)
+    print("Found " + str(len(annotation_parts)) + " files to be combined")
     annotation = open(rootpath + '/' + outfile, 'a')
+    print("Opened " + outfile + " for writing")
     for part in annotation_parts:
-        part_data = open(part).read
+        part_data = open(part).read()
         annotation.write(part_data)
     annotation.close()
+    print("Finished making annotaiton file")
+    print("Full file can be found at " + rootpath + "/" + outfile)
+    os.chdir(rootpath)
+    os.removedirs(tempdir)
 
 
 #   Find the extension of the given annotation file

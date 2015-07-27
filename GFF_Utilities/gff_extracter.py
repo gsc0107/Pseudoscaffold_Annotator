@@ -19,6 +19,7 @@ def contig_extracter(annotation):
         else:
             pass
     print("Original contigs found")
+    print("There are " + str(len(contig_original)) + " contigs to work with")
     return(contig_original, length_checker)
 
 

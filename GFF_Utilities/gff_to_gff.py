@@ -35,7 +35,7 @@ class gffGFF(object):
         contig = re.compile(ur'(%s)'%(self.unique))
         length = contig.findall(self.annotation)
         length_checker = len(length)
-        print length_checker
+        print("There should be " + str(length_checker) + " sequences")
         return(length_checker)
 
 #   Build the GFF file
