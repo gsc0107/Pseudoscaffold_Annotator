@@ -1,260 +1,107 @@
 #!/usr/bin/env python
 
-import argparse
-import subprocess
+#   Import required modules from standard Python library
 import os
 import sys
 import re
 
-Arguments = argparse.ArgumentParser(add_help=True)
-Arguments.add_argument('-r',
-    '--reference',
-    type=str,
-    default=None,
-    metavar='REFERENCE FASTA',
-    help="Input reference FASTA file")
+#   Import functions from the multiprocessing module
+from multiprocessing import Process, Lock
 
-Arguments.add_argument('-a',
-    '--annotation',
-    type=str,
-    default=None,
-    metavar='ANNOTATION',
-    help="Annotation file for reference FASTA")
+#   Import functions defined in another script bundled with this package
+import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
+import Miscellaneous_Utilities.argument_utilities as argument_utilities
+import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
+import Miscellaneous_Utilities.blast_utilities as blast_utilities
 
-Arguments.add_argument('-p',
-    '--pseudoscaffold',
-    type=str,
-    default=None,
-    metavar='PSEUDOSCAFFOLD FASTA',
-    help="Pseudoscaffold to be annotated")
-
-Arguments.add_argument('-o',
-    '--outfile',
-    type=str,
-    default='pseudoscaffold_annotations.gff',
-    metavar='OUTFILE',
-    help="Desired name of output annotation file. Please put full file name, including extension. Defalt is 'pseudoscaffold_annotations.gff'")
-
-args = Arguments.parse_args()
+#   Create two regex objects for determining given and desired file extensions
+gff = re.compile(ur'(.*\.gff$)')
+bed = re.compile(ur'(.*\.bed$)')
 
 
-def Usage():
-    print'''Usage: Pseudoscaffold_Annotator.py -r | --reference <reference fasta> -a | --annotation <reference annotation file> -p | --pseudoscaffold <assembled pseudoscaffold fasta> -o | --outfile <name of output annotation file>
-
-Pseudoscaffold_Annotator.py creates a GFF annotation file
-for an assembled pseudoscaffold fasta file based off a
-reference fasta file and GFF annotation file for the
-reference fasta file. Support for the BED format
-will be included in a later release.
-
-This program requires bedtools to be installed and
-found within the system path. Please do this before
-running Pseudscaffold_Annotator.py
-
-***IMPORTANT***
-Pseudoscaffold_Annotator.py requires no new lines
-within the sequence of the pseudoscaffold.
-The following is not an allowed sequence: 
-        >pseudoscaffold
-        ACTGTCAG
-        GCTATCGA
-
-pseudoscaffold_fixer.py removes new lines
-between sequence data, creating a fasta
-file that reads like:
-        >pseudoscaffold
-        ACTGTCAGGCTATCGA
-'''
-    return
-
-
-def sequence_extracter():
-    tmp = 'pseudoscaffold_annotator_temp.fasta'
-    print("Searching for original sequences using 'extraction.sh'")
-#    extraction_cmd = ['bash', './Shell_Scripts/extraction.sh', args.reference, args.annotation, tmp]
-    extraction_cmd = ['bash', './extraction.sh', args.reference, args.annotation, tmp]
-    extraction_shell = subprocess.Popen(extraction_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = extraction_shell.communicate()
-    seq_list = open(tmp).read()
-    sequence = re.compile(ur'([ACTGN]+)')
-    extracter = sequence.findall(seq_list)
-    #os.remove(tmp)
-    print("Found sequences")
-    return(extracter)
-
-
-def opener(annotation, reference, pseudoscaffold):
-    annotations = open(annotation).read()
-    references = open(reference).read()
-    pseudoscaffolds = open(pseudoscaffold).read()
-    print("Opened all files")
-    return(annotations, references, pseudoscaffolds)
-
-
-def contig_extracter(reference, annotation):
-    contig = re.compile(ur'(^[a-zA-Z0-9_]+)', re.MULTILINE)
-    contig_original = list()
-    extracted_contig = contig.findall(annotation)
-    length_checker = len(extracted_contig)
-    for entry in extracted_contig:
-        if not entry in contig_original:
-            contig_original.append(entry)
-        else:
-            pass
-    print("Original contigs found")
-    return(contig_original, length_checker)
-
-
-def contig_finder(extracted_sequence, length_checker, pseudoscaffold):
-    contig_pseudo = list()
-    for captured in extracted_sequence:
-        sequence_find = re.compile(ur'(^>[0-9a-z_\s]+)(?=\s.*%s)'%(captured), re.MULTILINE | re.DOTALL)
-        ID = sequence_find.search(pseudoscaffold)
-        contig_pseudo.append(ID.group())
-    if len(contig_pseudo) == length_checker:
-        print("Pseudoscaffold contigs found")
-        return(contig_pseudo)
+#   Annotate the pseudoscaffold
+#       Method dependent on the input and output annotation files
+def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
+    """Start annotating the pseudoscaffold"""
+    #   Change to temp directory
+    if not os.getcwd() == temppath:
+        os.chdir(temppath)
+    #   Create full sequence list
+    seq_list = annotation_utilities.extraction_sh(args['reference'], args['annotation'], shellpath)
+    #   Read the annotation, reference, and pseudoscaffold files
+    annotation, reference, pseudoscaffold = annotation_utilities.opener(args['annotation'], args['reference'], args['pseudoscaffold'])
+    #   Figure out what reference annotation file we have
+    find_gff, find_bed = annotation_utilities.extension_searcher(gff, bed, args['annotation'])
+    #   Figure out what pseudoscaffold annotation file we are making
+    create_gff, create_bed = annotation_utilities.extension_creator(gff, bed, args['outfile'])
+    #   Read the BLAST config file
+    bconf = blast_utilities.blast_config_parser(args['cfile'])
+    #   Make the BLAST databae
+    database_name, out, err = blast_utilities.make_blast_database(bconf, shellpath, args['pseudoscaffold'], pseudopath, temppath)
+    #   Annotate the pseudoscaffold given an input and output annotation format
+    if find_gff and create_gff:
+        print "Found GFF file, making GFF file"
+        import GFF_Utilities.gff_to_gff as gff_to_gff
+        import GFF_Utilities.gff_extracter as gff_extracter
+        contig_original, length_final = gff_extracter.contig_extracter(annotation)
+        for unique in contig_original:
+            out = str(unique + '_out.gff')
+            gff_annotate = gff_to_gff.gffGFF(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
+            gff_annotate.gff_to_gff()
+        # if __name__ == '__main__':
+        #     lock = Lock()
+        #     for unique in contig_original:
+        #         out=str(unique+"_out.gff")
+        #         print out
+        #         Process(target=gff_to_gff.gff_to_gff, args=(lock, seq_list, unique, reference, annotation, pseudoscaffold, out, temppath)).start()
+    elif find_gff and create_bed:
+        print "Found GFF file, making BED file"
+        import GFF_Utilities.gff_to_bed as gff_to_bed
+        import GFF_Utilities.gff_extracter as gff_extracter
+        contig_original, length_checker = gff_extracter.contig_extracter(reference, annotation)
+        if __name__ == '__main__':
+            lock = Lock()
+            for unique in contig_original:
+                out = str(unique+"_out.bed")
+                pass
+        pass
+    elif find_bed and create_gff:
+        print "Found BED file, making GFF file"
+        import BED_Utilities.bed_to_gff as bed_to_gff
+        pass
+    elif find_bed and create_bed:
+        print "Found BED file, making BED file"
+        import BED_Utilities.bed_to_bed as bed_to_bed
+        pass
     else:
-        sys.exit("Failed to find all pseudoscaffold contigs")
+        sys.exit("Could determine neither file format of input nor desired format of output file. Please make sure extensions are typed out fully.")
 
 
-def source_finder(contig_original, annotation, length_checker):
-    sources = list()
-    for unique in contig_original:
-        source_searcher = re.compile(ur'(?<=%s)\s+([a-zA-Z0-9]*)'%(unique))
-        sourcer = source_searcher.findall(annotation)
-        sources = sources + sourcer
-    if len(sources) == length_checker:
-        print("All 'source' fields found")
-        return(sources)
-    else:
-        sys.exit("Failed to collect all 'source' fields from original annotation file")
-
-
-def type_finder(contig_original, annotation, length_checker):
-    types = list()
-    for unique in contig_original:
-        type_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+([a-zA-Z0-9_]*)'%(unique))
-        typer = type_searcher.findall(annotation)
-        types = types + typer
-    if len(types) == length_checker:
-        print("All 'type' fields found")
-        return(types)
-    else:
-        sys.exit("Failed to collect all 'type' fields from original annotation file")
-
-
-def length_calculator(pseudoscaffold, extracted_sequence, length_checker):
-    start = list()
-    end = list()
-    for extract in extracted_sequence:
-        start_value = pseudoscaffold.find(extract)+1
-        start.append(start_value)
-        end_value = start_value+len(extract)
-        end.append(end_value)
-    if len(start) == len(end) == length_checker:
-        print("All lengths calculated")
-        return(start, end)
-    else:
-        sys.exit("Failed to calculate all lengths")
-
-
-def score_finder(contig_original, annotation, length_checker):
-    scores = list()
-    for unique in contig_original:
-        score_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+([a-zA-Z0-9\._\-])'%(unique))
-        scorer = score_searcher.findall(annotation)
-        scores = scores + scorer
-    if len(scores) == length_checker:
-        print("All 'score' fields found'")
-        return(scores)
-    else:
-        sys.exit("Failed to collect all 'score' fields from original annotation file")
-
-
-def strandedness(contig_original, annotation, length_checker):
-    strands = list()
-    for unique in contig_original:
-        strand_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+([+\-\.])'%(unique))
-        strander = strand_searcher.findall(annotation)
-        strands = strands + strander
-    if len(strands) == length_checker:
-        print("All 'strand' information found")
-        return(strands)
-    else:
-        sys.exit("Failed to collect all 'strand' information from original annotation file")
-
-
-def phase_finder(contig_original, annotation, length_checker):
-    phases = list()
-    for unique in contig_original:
-        phase_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+[+\-\.]\s+([\.012])'%(unique))
-        phaser = phase_searcher.findall(annotation)
-        phases = phases + phaser
-    if len(phases) == length_checker:
-        print("All 'phase' information found")
-        return(phases)
-    else:
-        sys.exit("Failed to collect all 'phase' information from original annotation file")
-
-
-def attribute_finder(contig_original, annotation, length_checker):
-    attributes = list()
-    for unique in contig_original:
-        attribute_searcher = re.compile(ur'(?<=%s)\s+[a-zA-Z0-9]+\s+[a-zA-Z0-9_]+\s+[0-9]+\s+[0-9]+\s+[a-zA-Z0-9\._\-]\s+[+\-\.]\s+[\.012]\s+(.*)'%(unique))
-        attributer = attribute_searcher.findall(annotation)
-        attributes = attributes + attributer
-    if len(attributes) == length_checker:
-        print("All attributes found")
-        return(attributes)
-    else:
-        sys.exit("Failed to collect all attributes from original annotation file")
-
-
-def gff3_builder(outfile, contig_pseudo, source, types, start, end, score, strand, phase, attributes, length_checker):
-    gff= open(outfile, 'w')
-    for i in range(0, length_checker):
-        gff.write(str(contig_pseudo[i]))
-        gff.write('\t')
-        gff.write(str(source[i]))
-        gff.write('\t')
-        gff.write(str(types[i]))
-        gff.write('\t')
-        gff.write(str(start[i]))
-        gff.write('\t')
-        gff.write(str(end[i]))
-        gff.write('\t')
-        gff.write(str(score[i]))
-        gff.write('\t')
-        gff.write(str(strand[i]))
-        gff.write('\t')
-        gff.write(str(phase[i]))
-        gff.write('\t')
-        gff.write(str(attributes[i]))
-        gff.write('\n')
-    gff.close()
-    print("GFF file created")
-
-
+#   Do the work here
 def main():
+    """Read arguments, determine which subroutine to run, and run it"""
+    #   No arguments give, display usage message
     if not sys.argv[1:]:
-        Usage()
+        argument_utilities.Usage()
         exit(1)
+    #   Create a dictionary of arguments
+    args = vars(argument_utilities.set_args())
+    print(args)
+    #   Run the 'fix' subroutine
+    if args['command'] == 'fix':
+        import Pseudoscaffold_Utilities.pseudoscaffold_fixer as pseudoscaffold_fixer
+        pseudoscaffold_fixer.main(args['pseudoscaffold'], args['new_pseudoscaffold'])
+    #   Run the 'blast-config' subroutine
+    elif args['command'] == 'blast-config':
+        blast_utilities.make_blast_config(args)
+    #   Run the 'annotate' subroutine
+    elif args['command'] == 'annotate':
+        rootpath, tempdir, temppath, shellpath, pseudopath = annotation_utilities.tempdir_creator(args['pseudoscaffold'])
+        pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath)
+    #   Incorrect subroutine specified, display usage message
     else:
-        extracted_sequence = sequence_extracter()
-        annotation, reference, pseudoscaffold = opener(args.annotation, args.reference, args.pseudoscaffold)
-        contig_original, length_checker = contig_finder(reference, annotation)
-        contig_pseudo = contig_finder(extracted_sequence, length_checker, pseudoscaffold)
-        #start, end = length_calculator(pseudoscaffold, extracted_sequence, length_checker)
-        #source = source_finder(contig_original, annotation, length_checker)
-        #types = type_finder(contig_original, annotation, length_checker)
-        #score = score_finder(contig_original, annotation, length_checker)
-        #strand = strandedness(contig_original, annotation, length_checker)
-        #phase = phase_finder(contig_original, annotation, length_checker)
-        #attributes = attribute_finder(contig_original, annotation, length_checker)
-        #gff3_builder(args.outfile, contig_pseudo, source, types, start, end, score, strand, phase, attributes, length_checker)
-        print contig_original
-        print contig_pseudo
-        print length_checker
+        argument_utilities.Usage()
+        exit(1)
+    annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
 
 main()
