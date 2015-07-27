@@ -86,7 +86,6 @@ def main():
         sys.exit(1)
     #   Create a dictionary of arguments
     args = vars(argument_utilities.set_args())
-    print(args)
     #   Run the 'fix' subroutine
     if args['command'] == 'fix':
         import Pseudoscaffold_Utilities.pseudoscaffold_fixer as pseudoscaffold_fixer
