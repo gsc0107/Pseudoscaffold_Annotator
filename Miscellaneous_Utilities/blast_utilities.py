@@ -4,6 +4,7 @@
 
 import sys
 import os
+import re
 
 #   Import required functions from the BioPython module
 try:
@@ -158,65 +159,92 @@ def blast_search(bconf, unique_sequence, database_name, temppath, pseudopath, un
     return(blast_out)
 
 
-#   Parse the BLAST output
-def blast_parser(bconf, blast_out):
-    """Parse the BLAST results"""
-    #   Open the BLASt results
-    result_handle = open(blast_out)
-    #   What's out threshold value?
-    threshold = bconf['threshold']
-    #   Set up lists to hold our output
-    titles = list()
+#   A new BLAST parser that finds what we're looking for while correcting for sequences too small to be found by BLAST
+def blast_parser(blast_out, length_checker, temppath, unique_sequence):
+    """Parse the BLAST results, correcting for small sequences not found by BLAST"""
+    #   Set up lists to hold info extracted from BLAST search
+    iterations = list()
+    scaffolds = list()
     starts = list()
     ends = list()
-    #   Parse the BLAST results
-    print("Parsing BLAST results")
-    blast_records = NCBIXML.parse(result_handle)
-    #   Iterate through the BLAST results
-    #       getting the title, start,
-    #       and end of each sequence
-    try:
-        while True:
-            brecord = next(blast_records)
-            for alignment in brecord.alignments:
-                for hsp in alignment.hsps:
-                    if hsp.expect < threshold:
-                        titles.append(alignment.title)
-                        starts.append(hsp.sbjct_start)
-                        ends.append(hsp.sbjct_end)
-                    break
-    except StopIteration:
-        print("Finished parsing results")
-        return(titles, starts, ends)
+    #   Define the regex object for searching through the BLAST XML document
+    find_info = re.compile(ur'<Iteration>\s{3}<Iteration_iter-num>(\d*)</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>[\w\d:-]*</Iteration_query-def>\s{3}<Iteration_query-len>\d*</Iteration_query-len>\s{1}<Iteration_hits>\s{1}<Hit>[\w\W]*?<Hit_def>([\w\d]*)[\w\W]*?<Hsp_hit-from>([\d]*)[\w\W]*?<Hsp_hit-to>(\d*)')
+    #   Find all information in the BLAST XML document
+    blast_xml = open(blast_out).read()
+    extracted_info = find_info.findall(blast_xml)
+    #   Sort the extracted information into their respective lists
+    for info in range(len(extracted_info)):
+        hit = extracted_info[info]
+        iterations.append(hit[0])
+        scaffolds.append(hit[1])
+        starts.append(hit[2])
+        ends.append(hit[3])
+    #   Make sure we have everything
+    if not len(scaffolds) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
+        num_missing = length_checker - len(iterations)
+        print("Missing " + str(num_missing) + " hit(s), searching now ...")
+        #   Convert iterations string from character to integers to a set
+        iterations = map(int, iterations)
+        #   Find the missing iterations
+        iterations = set(iterations)
+        #       Use the set.difference method to compare a sequence of numbers
+        #       representing the number of iterations that should have had to the
+        #       number of iterations that were actually found.
+        #       This will give us the iteration(s) that failed.
+        missing_iters = list(set(range(1, length_checker)).difference(iterations))
+        #   Get the informaiton for the full gene
+        gene_info = list(extracted_info[0])
+        gene_def = re.search(ur'<Iteration>\s{3}<Iteration_iter-num>1</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>([\w\d:-]*)', blast_out).groups()[0]
+        gene_info.append(gene_def)
+        #   Get the definintion start and ends of the gene
+        gene_info = gene_info + gene_info[4].split(':')[1].split('-')
+        #   Find the contig definitions for each missing hit
+        sequence = open(temppath + '/' + unique_sequence).read()
+        for missing in missing_iters:
+            query_searcher = re.compile(ur'<Iteration>\s{3}<Iteration_iter-num>%s</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>([\w\d:-]*)'%(str(missing)))
+            query = query_searcher.search(blast_xml).groups()[0]
+            #   Find the missing information from the original sequence file
+            #   The sequence for the missing query for checking
+            get_sequence = re.compile(ur'>%s\s([ACGTN]*)'%(query))
+            q_seq = get_sequence.search(sequence).groups()[0]
+            #   Start and end positions for this query
+            q_start = query.split(':')[1].split('-')[0]
+            q_end = query.split(':')[1].split('-')[1]
+            #   Ensure the missing sequence exists within the gene sequence
+            gene_seq = re.search(ur'>%s\s([ACGTN]*)'%(gene_info[4]), sequence).groups()[0]
+            test_seq = gene_seq[int(q_start) - int(gene_info[5]) : int(q_end) - int(gene_info[6])]
+            if test_seq == q_seq:
+                #   Scale the q_start and q_end values to match that of the pseudoscaffold
+                q_start = int(gene_info[2]) - int(gene_info[5]) + int(q_start)
+                q_end = int(gene_info[2]) - int(gene_info[5]) + int(q_end)
+                #   Figure out where to insert the new information into existing lists
+                insert_position = missing - 1
+                iterations.insert(insert_position, missing)
+                scaffolds.insert(insert_position, scaffolds[0])
+                starts.insert(insert_position, str(q_start))
+                ends.insert(insert_position, str(q_end))
+            else:
+                sys.exit("Failed to find missing hit")
+        if not len(scaffolds) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
+            sys.exit("Failed to find missing hit")
+        else:
+            return(scaffolds, starts, ends)
+    else:
+            print("Found all hits")
+            return(scaffolds, starts, ends)
+    # return(queries)
 
-
-#   Fix the titles of the hits, because NCBI's XML format is weird
-def title_fixer(titles):
-    """Remove the excess informaiton from the 'title' field from the XML resutls"""
-    print("Fixing titles from parsing BLAST results")
-    #   Set up a new list for fixing the titles
-    fixed_titles = list()
-    #   Fix the titles
-    for i in range(len(titles)):
-        title = titles[i]
-        split_title = title.split()
-        pseudo_contig = split_title[0]
-        fixed_titles.append(pseudo_contig)
-    print("Finished fixing titles")
-    return(fixed_titles)
 
 #   Run the BLAST search and parse the results
 def run_blast(bconf, unique_sequence, database_name, length_checker, temppath, pseudopath, unique):
     """Perform the BLAST search and parse the results"""
     #   BLAST
     blast_out = blast_search(bconf, unique_sequence, database_name, temppath, pseudopath, unique)
-    titles, starts, ends = blast_parser(bconf, blast_out)
-    fixed_titles = title_fixer(titles)
-    print len(titles)
-    print len(fixed_titles)
+    scaffolds, starts, ends = blast_parser(blast_out, length_checker)
+    print len(scaffolds)
     print len(starts)
     print len(ends)
-    if not len(fixed_titles) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
+    # if not len(scaffolds) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
         sys.exit("Failed to find all sequences in BLAST search")
     else:
-        return(fixed_titles, starts, ends)
+        return(scaffolds, starts, ends)
