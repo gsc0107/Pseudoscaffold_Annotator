@@ -63,7 +63,7 @@ def annotation_builder(rootpath, tempdir, temppath, outfile):
     extension = outfile.split('.')[-1]
     file_finder = re.compile(ur'([a-zA-Z0-9-_\.]*)%s'%(extension))
     annotation_parts = file_finder.findall(file_list)
-    annotation = open(outfile, 'a')
+    annotation = open(rootpath + '/' + outfile, 'a')
     for part in annotation_parts:
         part_data = open(part).read
         annotation.write(part_data)

@@ -98,10 +98,10 @@ def main():
     elif args['command'] == 'annotate':
         rootpath, tempdir, temppath, shellpath, pseudopath = annotation_utilities.tempdir_creator(args['pseudoscaffold'])
         pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath)
-        #annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
     #   Incorrect subroutine specified, display usage message
     else:
         argument_utilities.Usage()
         exit(1)
+    annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
 
 main()
