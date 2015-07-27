@@ -1,8 +1,3 @@
 [BlastConfiguration]
-outfmt = 5
-evalue = 0.05
-max_seqs = 1
 override = False
-threshold = 0.04
-db_type = nucl
 

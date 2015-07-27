@@ -91,9 +91,11 @@ def main():
     if args['command'] == 'fix':
         import Pseudoscaffold_Utilities.pseudoscaffold_fixer as pseudoscaffold_fixer
         pseudoscaffold_fixer.main(args['pseudoscaffold'], args['new_pseudoscaffold'])
+        sys.exit(0)
     #   Run the 'blast-config' subroutine
     elif args['command'] == 'blast-config':
         blast_utilities.make_blast_config(args)
+        sys.exit(0)
     #   Run the 'annotate' subroutine
     elif args['command'] == 'annotate':
         rootpath, tempdir, temppath, shellpath, pseudopath = annotation_utilities.tempdir_creator(args['pseudoscaffold'])

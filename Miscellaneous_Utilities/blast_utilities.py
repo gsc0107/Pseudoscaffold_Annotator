@@ -104,8 +104,6 @@ def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath, temppath):
     #   Nope, we have
     else:
         database_name = bconf['db_name']
-    else:
-        sys.exit("Incorrect BLAST database type specified")
     #   What was the override command?
     override = bconf['override']
     #   Do we make or not?
