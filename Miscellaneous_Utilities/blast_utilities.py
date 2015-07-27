@@ -219,6 +219,7 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence):
                 q_end = int(gene_info[2]) - int(gene_info[5]) + int(q_end)
                 #   Figure out where to insert the new information into existing lists
                 insert_position = missing - 1
+                iterations = list(iterations)
                 iterations.insert(insert_position, missing)
                 scaffolds.insert(insert_position, scaffolds[0])
                 starts.insert(insert_position, str(q_start))
