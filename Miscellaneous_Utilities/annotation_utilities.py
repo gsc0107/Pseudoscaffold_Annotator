@@ -7,6 +7,7 @@ import subprocess
 import sys
 import os
 import re
+import shutil
 
 
 #   Open the files
@@ -73,7 +74,7 @@ def annotation_builder(rootpath, tempdir, temppath, outfile):
     print("Finished making annotaiton file")
     print("Full file can be found at " + rootpath + "/" + outfile)
     os.chdir(rootpath)
-    os.removedirs(tempdir)
+    shutil.rmtree(tempdir)
 
 
 #   Find the extension of the given annotation file
