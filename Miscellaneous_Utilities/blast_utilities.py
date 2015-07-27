@@ -240,7 +240,7 @@ def run_blast(bconf, unique_sequence, database_name, length_checker, temppath, p
     """Perform the BLAST search and parse the results"""
     #   BLAST
     blast_out = blast_search(bconf, unique_sequence, database_name, temppath, pseudopath, unique)
-    scaffolds, starts, ends = blast_parser(blast_out, length_checker)
+    scaffolds, starts, ends = blast_parser(blast_out, length_checker, temppath, unique_sequence)
     print len(scaffolds)
     print len(starts)
     print len(ends)
