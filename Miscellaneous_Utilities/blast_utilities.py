@@ -244,7 +244,4 @@ def run_blast(bconf, unique_sequence, database_name, length_checker, temppath, p
     print len(scaffolds)
     print len(starts)
     print len(ends)
-    # if not len(scaffolds) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
-        sys.exit("Failed to find all sequences in BLAST search")
-    else:
-        return(scaffolds, starts, ends)
+    return(scaffolds, starts, ends)
