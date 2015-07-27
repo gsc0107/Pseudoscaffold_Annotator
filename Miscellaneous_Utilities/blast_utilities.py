@@ -175,6 +175,7 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence):
     #   Make sure we have everything
     if not len(scaffolds) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
         num_missing = length_checker - len(iterations)
+        print("We have " + str(len(iterations)) + " hit(s) so far")
         print("Missing " + str(num_missing) + " hit(s), searching now ...")
         #   Convert iterations string from character to integers to a set
         iterations = map(int, iterations)
@@ -185,9 +186,12 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence):
         #       number of iterations that were actually found.
         #       This will give us the iteration(s) that failed.
         missing_iters = list(set(range(1, length_checker)).difference(iterations))
+        print("Missing iteration numbers:")
+        print(missing_iters)
         #   Get the informaiton for the full gene
         gene_info = list(extracted_info[0])
         gene_def = re.search(ur'<Iteration>\s{3}<Iteration_iter-num>1</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>([\w\d:-]*)', blast_xml).groups()[0]
+        print gene_def
         gene_info.append(gene_def)
         #   Get the definintion start and ends of the gene
         gene_info = gene_info + gene_info[4].split(':')[1].split('-')
@@ -200,12 +204,17 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence):
             #   The sequence for the missing query for checking
             get_sequence = re.compile(ur'>%s\s([ACGTN]*)'%(query))
             q_seq = get_sequence.search(sequence).groups()[0]
+            print("Qstart: " + q_seq)
             #   Start and end positions for this query
             q_start = query.split(':')[1].split('-')[0]
+            print q_start
             q_end = query.split(':')[1].split('-')[1]
+            print("Qend: " + q_end)
             #   Ensure the missing sequence exists within the gene sequence
             gene_seq = re.search(ur'>%s\s([ACGTN]*)'%(gene_info[4]), sequence).groups()[0]
+            print("Gene sequence: " + gene_seq)
             test_seq = gene_seq[int(q_start) - int(gene_info[5]) : int(q_end) - int(gene_info[6])]
+            print("Test_seq: " + test_seq)
             if test_seq == q_seq:
                 #   Scale the q_start and q_end values to match that of the pseudoscaffold
                 q_start = int(gene_info[2]) - int(gene_info[5]) + int(q_start)
@@ -218,15 +227,15 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence):
                 starts.insert(insert_position, str(q_start))
                 ends.insert(insert_position, str(q_end))
             else:
-                sys.exit("Failed to find missing hit")
+                print("Could not find " + q_seq + " in the gene sequence")
+                sys.exit("Whoops")
         if not len(scaffolds) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
-            sys.exit("Failed to find missing hit")
+            sys.exit("Failed to find missing hit(s)")
         else:
             return(scaffolds, starts, ends)
     else:
             print("Found all hits")
             return(scaffolds, starts, ends)
-    # return(queries)
 
 
 #   Run the BLAST search and parse the results
@@ -235,7 +244,4 @@ def run_blast(bconf, unique_sequence, database_name, length_checker, temppath, p
     #   BLAST
     blast_out = blast_search(bconf, unique_sequence, database_name, temppath, pseudopath, unique)
     scaffolds, starts, ends = blast_parser(blast_out, length_checker, temppath, unique_sequence)
-    print len(scaffolds)
-    print len(starts)
-    print len(ends)
     return(scaffolds, starts, ends)

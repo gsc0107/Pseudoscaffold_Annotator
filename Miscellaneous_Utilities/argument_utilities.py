@@ -8,6 +8,7 @@ import os
 #   Set rootpath to current working directory
 rootpath = os.getcwd()
 
+
 #   Set and parse arguments
 def set_args():
     """Set and parse the arguments here. There are three subroutines for this package:
@@ -106,7 +107,7 @@ def set_args():
 #   Usage message
 def Usage():
     """Prints usage message"""
-    print'''Usage: Pseudoscaffold_Annotator.py <subroutine>
+    print'''Usage: ./pseudoscaffold_annotator.py <subroutine>
 where: <subroutine> is one of
         fix
         blast-config

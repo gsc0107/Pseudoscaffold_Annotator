@@ -10,9 +10,9 @@ This program requires Python 2.7 or higher, or the `argparse` module installed f
 **NOTE: this has NOT been tested on Python 3.x**
 
 Other dependencies include:
- - BEDTools
- - NCBI's BLAST+
- - BioPython
+ - [BEDTools](http://bedtools.readthedocs.org/en/latest/)
+ - [NCBI's BLAST+](http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
+ - [BioPython](http://biopython.org/wiki/Main_Page)
 
 **NOTE: This program is currently under testing. I do _not_ recommend use of this program for any important uses just yet**
 
