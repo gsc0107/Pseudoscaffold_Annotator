@@ -6,6 +6,7 @@
 import re
 import sys
 
+
 #       Find the seqid (column 1) from the GFF file
 def contig_extracter(annotation):
     """Extract the contig IDs from the original annotation file. Also provides one last check to make sure all information was transfered from original annotation file to annotation file for pseudoscaffold"""
@@ -58,6 +59,7 @@ def score_finder(unique, annotation, length_checker):
     else:
         sys.exit("Failed to collect all 'score' fields from original annotation file")
 
+
 #       Find the strand information (column 7) from the GFF file
 def strandedness(unique, annotation, length_checker):
     """Find the strand information from the original annotation file."""
@@ -69,6 +71,7 @@ def strandedness(unique, annotation, length_checker):
     else:
         sys.exit("Failed to collect all 'strand' information from original annotation file")
 
+
     #       Find the phase (column 8) from the GFF file
 def phase_finder(unique, annotation, length_checker):
     """Find the phase information from the original annotation file."""
@@ -79,6 +82,7 @@ def phase_finder(unique, annotation, length_checker):
         return(phases)
     else:
         sys.exit("Failed to collect all 'phase' information from original annotation file")
+
 
 #       Find any attributes (column 9) from the GFF file
 def attribute_finder(unique, annotation, length_checker):

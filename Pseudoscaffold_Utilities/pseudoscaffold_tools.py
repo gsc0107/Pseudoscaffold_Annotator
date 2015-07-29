@@ -6,6 +6,7 @@
 import re
 import sys
 
+
 #      Extract the sequences defined by the original annotation file
 def sequence_finder(seq_list, unique):
     """Find the sequences pertaining to the unique contig"""

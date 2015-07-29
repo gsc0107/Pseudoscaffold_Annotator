@@ -7,6 +7,7 @@ import sys
 import os
 import re
 
+
 #   Open the pseudoscaffold for reading and the outfile for writing
 def opener(pseudoscaffold, outfile):
     """Opens the original pseudoscaffold for reading and the outfile for writing the new pseudoscaffold"""

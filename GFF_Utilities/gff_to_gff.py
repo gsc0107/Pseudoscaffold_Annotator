@@ -27,6 +27,7 @@ class gffGFF(object):
         self.pseudopath = pseudopath
         return
 
+
     #   Find the number of times this a contig shows up in original annotation file
     def find_length(self):
         """Creates a check for each part of the extraction process to ensure the correct amount of data is gathered from the original annotation file.
@@ -37,6 +38,7 @@ class gffGFF(object):
         length_checker = len(length)
         print("There should be " + str(length_checker) + " sequences")
         return(length_checker)
+
 
 #   Build the GFF file
     def gff3_builder(self, titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker):
@@ -65,6 +67,7 @@ class gffGFF(object):
         gff.close()
         print("GFF file created")
         return
+
 
     #   Do the work here
     def gff_to_gff(self):
