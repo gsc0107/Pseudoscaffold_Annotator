@@ -46,6 +46,7 @@ def type_finder(unique, annotation, length_checker):
     else:
         sys.exit("Failed to collect all 'type' fields from original annotation file")
 
+
 #Find the score (column 6) from the GFF file
 def score_finder(unique, annotation, length_checker):
     """Find the score information from the original annotation file."""
