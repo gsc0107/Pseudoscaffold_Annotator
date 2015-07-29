@@ -200,21 +200,21 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence, types):
                 #   The sequence for the missing query for checking
                 get_sequence = re.compile(ur'>%s\s([ACGTN]*)'%(query))
                 q_seq = get_sequence.search(sequence).groups()[0]
-                print("Qstart: " + q_seq)
+                print("Qseq: " + q_seq)
                 #   Start and end positions for this query
                 q_start = query.split(':')[1].split('-')[0]
                 print q_start
                 q_end = query.split(':')[1].split('-')[1]
                 print("Qend: " + q_end)
                 #   Ensure the missing sequence exists within the gene sequence
-                gene_seq = re.search(ur'>%s\s([ACGTN]*)'%(gene_info[4]), sequence).groups()[0]
+                gene_seq = re.search(ur'>%s\s([ACGTN]*)'%(gene_part[4]), sequence).groups()[0]
                 print("Gene sequence: " + gene_seq)
-                test_seq = gene_seq[int(q_start) - int(gene_info[5]) : int(q_end) - int(gene_info[6])]
+                test_seq = gene_seq[int(q_start) - int(gene_part[5]) : int(q_end) - int(gene_part[6])]
                 print("Test_seq: " + test_seq)
                 if test_seq == q_seq:
                     #   Scale the q_start and q_end values to match that of the pseudoscaffold
-                    q_start = int(gene_info[2]) - int(gene_info[5]) + int(q_start)
-                    q_end = int(gene_info[2]) - int(gene_info[5]) + int(q_end)
+                    q_start = int(gene_part[2]) - int(gene_part[5]) + int(q_start)
+                    q_end = int(gene_part[2]) - int(gene_part[5]) + int(q_end)
                     #   Figure out where to insert the new information into existing lists
                     insert_position = missing - 1
                     iterations = list(iterations)
