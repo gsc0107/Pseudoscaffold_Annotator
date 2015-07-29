@@ -211,7 +211,12 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence, types):
                 print("Gene sequence: " + gene_seq)
                 print gene_part[5]
                 print gene_part[6]
-                test_seq = gene_seq[int(q_start) - int(gene_part[5]) : int(q_end) - int(gene_part[6])]
+                tstart = int(q_start) - int(gene_part[5])
+                tend = int(q_end) - int(gene_part[6])
+                if tend == 0:
+                    test_seq = gene_seq[tstart :]
+                else:
+                    test_seq = gene_seq[int(q_start) - int(gene_part[5]) : int(q_end) - int(gene_part[6])]
                 print("Test_seq: " + test_seq)
                 if test_seq == q_seq:
                     #   Scale the q_start and q_end values to match that of the pseudoscaffold
@@ -231,6 +236,7 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence, types):
         if not len(scaffolds) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
             sys.exit("Failed to find missing hit(s)")
         else:
+            print("Found the missing values")
             return(scaffolds, starts, ends)
     else:
             print("Found all hits")
