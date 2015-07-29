@@ -203,12 +203,14 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence, types):
                 print("Qseq: " + q_seq)
                 #   Start and end positions for this query
                 q_start = query.split(':')[1].split('-')[0]
-                print q_start
+                print("Qstart: " + q_start)
                 q_end = query.split(':')[1].split('-')[1]
                 print("Qend: " + q_end)
                 #   Ensure the missing sequence exists within the gene sequence
                 gene_seq = re.search(ur'>%s\s([ACGTN]*)'%(gene_part[4]), sequence).groups()[0]
                 print("Gene sequence: " + gene_seq)
+                print gene_part[5]
+                print gene_part[6]
                 test_seq = gene_seq[int(q_start) - int(gene_part[5]) : int(q_end) - int(gene_part[6])]
                 print("Test_seq: " + test_seq)
                 if test_seq == q_seq:
