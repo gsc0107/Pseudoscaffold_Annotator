@@ -183,9 +183,9 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence, types):
         iterations = set(iterations)
         #       Use the set.difference method to compare a sequence of numbers
         #       representing the number of iterations that should have had to the
-        #       number of iterations that were actually found.
+        #       number of iterations that were actually found. Add one for Python.
         #       This will give us the iteration(s) that failed.
-        missing_iters = list(set(range(1, length_checker)).difference(iterations))
+        missing_iters = list(set(range(1, length_checker + 1)).difference(iterations))
         print("Missing iteration numbers:")
         print(missing_iters)
         #   Get the informaiton for the full gene
