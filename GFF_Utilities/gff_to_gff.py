@@ -81,7 +81,7 @@ class gffGFF(object):
         phases = gff_extracter.phase_finder(self.unique, self.annotation, length_checker)
         attributes = gff_extracter.attribute_finder(self.unique, self.annotation, length_checker)
         unique_sequences = pseudoscaffold_tools.sequence_finder(self.seq_list, self.unique)
-        titles, starts, ends = blast_utilities.run_blast(self.bconf, unique_sequences, self.database_name, length_checker, self.temppath, self.pseudopath, self.unique)
+        titles, starts, ends = blast_utilities.run_blast(self.bconf, unique_sequences, self.database_name, length_checker, self.temppath, self.pseudopath, self.unique, types)
         self.gff3_builder(titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker)
         #lock.release()
         return
