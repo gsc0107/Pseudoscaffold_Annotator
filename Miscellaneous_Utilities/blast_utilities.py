@@ -222,10 +222,10 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence, types):
                     scaffolds.insert(insert_position, scaffolds[0])
                     starts.insert(insert_position, str(q_start))
                     ends.insert(insert_position, str(q_end))
+                    break
                 else:
                     print("Could not find " + q_seq + " in the gene sequence")
                     print("Whoops")
-                break
         if not len(scaffolds) == length_checker or not len(starts) == length_checker or not len(ends) == length_checker:
             sys.exit("Failed to find missing hit(s)")
         else:
