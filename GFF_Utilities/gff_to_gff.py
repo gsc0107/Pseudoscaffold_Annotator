@@ -33,7 +33,7 @@ class gffGFF(object):
         """Creates a check for each part of the extraction process to ensure the correct amount of data is gathered from the original annotation file.
             The unique argument is the contig to search for within the annotation file.
             The annotation argument is the original annotation file"""
-        contig = re.compile(ur'(%s)'%(self.unique))
+        contig = re.compile(ur'(%s)\t'%(self.unique))
         length = contig.findall(self.annotation)
         length_checker = len(length)
         print("There should be " + str(length_checker) + " sequences")
