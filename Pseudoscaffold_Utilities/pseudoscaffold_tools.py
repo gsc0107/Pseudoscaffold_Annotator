@@ -11,7 +11,7 @@ import sys
 def sequence_finder(seq_list, unique):
     """Find the sequences pertaining to the unique contig"""
     print("Searching for sequences unique to " + unique)
-    sequence = re.compile(ur'(>%s.*\n[ACTGN]+)'%(unique))
+    sequence = re.compile(ur'(>%s:.*\n[ACTGN]+)'%(unique))
     finder = sequence.findall(seq_list)
     specific_filename = str(unique+'_sequence.fasta')
     specific_sequences = open(specific_filename, 'w')
