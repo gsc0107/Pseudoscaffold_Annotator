@@ -15,6 +15,11 @@ import Miscellaneous_Utilities.blast_utilities as blast_utilities
 gff = re.compile(ur'(.*\.gff$)')
 bed = re.compile(ur'(.*\.bed$)')
 
+seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
+
+def t(args):
+    print(*args)
+    sys.exit(0)
 
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
@@ -22,6 +27,8 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     """Start annotating the pseudoscaffold"""
     #   Import from the multiprocessing module
     from multiprocessing import Pool
+    #   Import the itertools module for argument passing
+    import itertools
     #   Change to temp directory
     if not os.getcwd() == temppath:
         os.chdir(temppath)
@@ -43,10 +50,16 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
         import GFF_Utilities.gff_to_gff as gff_to_gff
         import GFF_Utilities.gff_extracter as gff_extracter
         contig_original, length_final = gff_extracter.contig_extracter(annotation)
+        #   Set up a list to hold outfile names
+        out = list()
         for unique in contig_original:
-            out = str(unique + '_out.gff')
-            gff_annotate = gff_to_gff.gffGFF(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
-            gff_annotate.gff_to_gff()
+            out.append(str(unique + '_out.gff'))
+        #   Set up a list of arguments
+        args = zip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath))
+        if __name__ == '__main__':
+            pool = Pool()
+            #pool.map(gff_to_gff.gff_to_gff, args)
+            pool.map(t, args)
     elif find_gff and create_bed:
         print "Found GFF file, making BED file"
         import GFF_Utilities.gff_to_bed as gff_to_bed
@@ -92,7 +105,7 @@ def main():
     elif args['command'] == 'annotate':
         rootpath, tempdir, temppath, shellpath, pseudopath = annotation_utilities.tempdir_creator(args['pseudoscaffold'])
         pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath)
-        annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
+        #annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
     #   Incorrect subroutine specified, display usage message
     else:
         argument_utilities.Usage()
