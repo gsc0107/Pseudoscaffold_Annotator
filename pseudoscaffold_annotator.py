@@ -17,7 +17,7 @@ bed = re.compile(ur'(.*\.bed$)')
 
 def t(args):
     print sys.argv[1:]
-    sys.exit(0)
+    return
 
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
