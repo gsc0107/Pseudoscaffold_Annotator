@@ -16,8 +16,7 @@ gff = re.compile(ur'(.*\.gff$)')
 bed = re.compile(ur'(.*\.bed$)')
 
 def t(args):
-    print(*args)
-    sys.exit(0)
+    return(*args)
 
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
