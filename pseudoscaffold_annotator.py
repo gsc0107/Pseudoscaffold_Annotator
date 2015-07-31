@@ -23,6 +23,7 @@ bed = re.compile(ur'(.*\.bed$)')
 #       Method dependent on the input and output annotation files
 def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     """Start annotating the pseudoscaffold"""
+    from multiprocessing import Pool
     #   Change to temp directory
     if not os.getcwd() == temppath:
         os.chdir(temppath)
