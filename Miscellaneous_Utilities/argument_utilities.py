@@ -121,14 +121,14 @@ will be included in a later release.
 
 This program requires bedtools, BioPython and NCBI's BLAST+
 excecutables to be installed andfound within the system path.
-Please do this before running Pseudscaffold_Annotator.py
+Please do this before running pseudoscaffold_annotator.py
 
 To configure the parameters for the BLAST search,
 use the 'blast-config' subroutine to generate a new
-configuration file to be used by Pseudoscaffold_Annotator.py
+configuration file to be used by pseudoscaffold_annotator.py
 
 ***IMPORTANT***
-Pseudoscaffold_Annotator.py requires no new lines
+pseudoscaffold_annotator.py requires no new lines
 within the sequence of the pseudoscaffold.
 The following is not an allowed sequence:
         >pseudoscaffold
