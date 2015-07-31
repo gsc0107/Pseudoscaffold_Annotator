@@ -15,8 +15,8 @@ import Miscellaneous_Utilities.blast_utilities as blast_utilities
 gff = re.compile(ur'(.*\.gff$)')
 bed = re.compile(ur'(.*\.bed$)')
 
-def t(args):
-    print sys.argv[1:]
+def wrapper(args):
+    print args
     return
 
 #   Annotate the pseudoscaffold
