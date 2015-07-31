@@ -15,8 +15,6 @@ import Miscellaneous_Utilities.blast_utilities as blast_utilities
 gff = re.compile(ur'(.*\.gff$)')
 bed = re.compile(ur'(.*\.bed$)')
 
-seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
-
 def t(args):
     print(*args)
     sys.exit(0)
