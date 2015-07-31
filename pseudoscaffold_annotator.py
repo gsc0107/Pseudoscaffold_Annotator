@@ -5,9 +5,6 @@ import os
 import sys
 import re
 
-#   Import functions from the multiprocessing module
-from multiprocessing import Process, Lock
-
 #   Import functions defined in another script bundled with this package
 import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
 import Miscellaneous_Utilities.argument_utilities as argument_utilities
@@ -23,6 +20,7 @@ bed = re.compile(ur'(.*\.bed$)')
 #       Method dependent on the input and output annotation files
 def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     """Start annotating the pseudoscaffold"""
+    #   Import from the multiprocessing module
     from multiprocessing import Pool
     #   Change to temp directory
     if not os.getcwd() == temppath:
@@ -49,12 +47,6 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
             out = str(unique + '_out.gff')
             gff_annotate = gff_to_gff.gffGFF(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
             gff_annotate.gff_to_gff()
-        # if __name__ == '__main__':
-        #     lock = Lock()
-        #     for unique in contig_original:
-        #         out=str(unique+"_out.gff")
-        #         print out
-        #         Process(target=gff_to_gff.gff_to_gff, args=(lock, seq_list, unique, reference, annotation, pseudoscaffold, out, temppath)).start()
     elif find_gff and create_bed:
         print "Found GFF file, making BED file"
         import GFF_Utilities.gff_to_bed as gff_to_bed

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+#GET RID OF CLASS
 """A script to build a GFF annotation with a reference GFF file"""
 
 #   Import required modules from standard Python library
