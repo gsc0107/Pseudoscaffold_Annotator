@@ -28,7 +28,7 @@ def find_length(unique, annotation):
 def gff3_builder(titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker, outfile):
     """Builds a GFF file from extracted components of original GFF file"""
     gff= open(outfile, 'w')
-    print("Opened " + .outfile + " for writing")
+    print("Opened " + outfile + " for writing")
     for i in range(0, length_checker):
         gff.write(str(titles[i]))
         gff.write('\t')
