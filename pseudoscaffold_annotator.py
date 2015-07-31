@@ -57,7 +57,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
         if __name__ == '__main__':
             pool = Pool()
             #pool.map(gff_to_gff.gff_to_gff, args)
-            pool.map(t, args)
+            pool.map(wrapper, args)
     elif find_gff and create_bed:
         print "Found GFF file, making BED file"
         import GFF_Utilities.gff_to_bed as gff_to_bed
