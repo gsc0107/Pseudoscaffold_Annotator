@@ -3,7 +3,7 @@
 ___
 ___
 
-This is a program for annotating an assembled pseudoscaffold using a reference genome and annotation file. Currently, this only supports using and writing in the GFF3 format. Support for the BED format will come later.
+This is a program for annotating an assembled pseudoscaffold using a reference genome and annotation file. Currently, this only supports using GFF3 files as input, but can output both GFF3 files and 3-column BED files. Increased support for the BED format will come later.
 
 Running this program to annotate a pseudoscaffold is done using the following command:
 
