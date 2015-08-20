@@ -13,7 +13,7 @@ import GFF_Utilities.gff_extracter as gff_extracter
 
 
 #   A class to handle making the BED annotation
-class bedGFF(object):
+class gffBED(object):
     def __init__(self, seq_list, unique, reference, annotation, pseudoscaffold, outfile, temppath, bconf, database_name, pseudopath):
         self.seq_list = seq_list
         self.unique = unique
@@ -41,7 +41,7 @@ class bedGFF(object):
 
 
     #   Make a BED3 file
-    def bed3_builder(self, titles, starts, ends):
+    def bed3_builder(self, titles, starts, ends, length_checker):
         """Builds a BED3 filed from extracted components of original GFF file"""
         bed3=open(self.outfile, 'w')
         print("Opened " + self.outfile + " for writing")
@@ -66,5 +66,5 @@ class bedGFF(object):
         length_checker = self.find_length()
         unique_sequences = pseudoscaffold_tools.sequence_finder(self.seq_list, self.unique)
         itles, starts, ends = blast_utilities.run_blast(self.bconf, unique_sequences, self.database_name, length_checker, self.temppath, self.pseudopath, self.unique, types)
-        self.bed3_builder(titles, starts, ends)
+        self.bed3_builder(titles, starts, ends, length_checker)
         return

@@ -48,23 +48,15 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
             out = str(unique + '_out.gff')
             gff_annotate = gff_to_gff.gffGFF(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
             gff_annotate.gff_to_gff()
-        # if __name__ == '__main__':
-        #     lock = Lock()
-        #     for unique in contig_original:
-        #         out=str(unique+"_out.gff")
-        #         print out
-        #         Process(target=gff_to_gff.gff_to_gff, args=(lock, seq_list, unique, reference, annotation, pseudoscaffold, out, temppath)).start()
     elif find_gff and create_bed:
         print "Found GFF file, making BED file"
         import GFF_Utilities.gff_to_bed as gff_to_bed
         import GFF_Utilities.gff_extracter as gff_extracter
-        contig_original, length_checker = gff_extracter.contig_extracter(reference, annotation)
-        if __name__ == '__main__':
-            lock = Lock()
-            for unique in contig_original:
-                out = str(unique+"_out.bed")
-                pass
-        pass
+        contig_original, length_final = gff_extracter.contig_extracter(annotation)
+        for unique in contig_original:
+            out = str(unique + '_out.bed')
+            bed_annotate = gff_to_bed.gffBED(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
+            bed_annotate.gff_to_bed()
     elif find_bed and create_gff:
         print "Found BED file, making GFF file"
         import BED_Utilities.bed_to_gff as bed_to_gff
