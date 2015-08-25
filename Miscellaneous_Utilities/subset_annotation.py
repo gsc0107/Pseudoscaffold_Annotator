@@ -14,11 +14,9 @@ def subset_annotation(args, gff, bed):
     #   Read the annotation file
     annotation = open(args['annotation']).read()
     find_gff, find_bed = annotation_utilities.extension_searcher(gff, bed, args['annotation'])
-    basename = os.path.basename(args['annotation'])
-    base = basename.split('.')[0]
     if find_gff:
         import GFF_Utilities.gff_subset as gff_subset
-        out_gff = str(base + ".gff")
+        out_gff = str(args['out'] + ".gff")
         gff_subset.gff_subset(annotation, args['desired'], out_gff)
     elif find_bed:
         print("Functionality not yet implemented")
