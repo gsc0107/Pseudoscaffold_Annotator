@@ -38,7 +38,7 @@ To fix a pseudoscaffold, run the following command:
 ./pseudoscaffold_annotator.py fix -p PSEUDOSCAFFOLD_FASTA -n FIXED_FASTA
 ```
 
-This program requires Python 2.7 or higher, or the `argparse` module installed for Python 2.6
+This program requires Python 2.7 or higher, or the [`argparse`](https://pypi.python.org/pypi/argparse) module installed for Python 2.6
 
 **NOTE: this has NOT been tested on Python 3.x**
 
