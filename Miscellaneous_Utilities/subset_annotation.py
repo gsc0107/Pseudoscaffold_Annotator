@@ -12,7 +12,7 @@ import annotation_utilities
 def subset_annotation(args, gff, bed):
     """Create a subset of an annotation file"""
     #   Read the annotation file
-    annotation = open(args['annotation']).read
+    annotation = open(args['annotation']).read()
     find_gff, find_bed = annotation_utilities.extension_searcher(gff, bed, args['annotation'])
     basename = os.path.basename(args['annotation'])
     base = basename.split('.')[0]
