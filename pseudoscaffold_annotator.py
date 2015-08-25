@@ -108,6 +108,10 @@ def main():
         rootpath, tempdir, temppath, shellpath, pseudopath = annotation_utilities.tempdir_creator(args['pseudoscaffold'])
         pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath)
         #annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
+    #   Run the 'subset' subroutine
+    elif args['command'] == 'subset':
+        import Miscellaneous_Utilities.subset_annotation as subset_annotation
+        subset_annotation.subset_annotation(args, gff, bed)
     #   Incorrect subroutine specified, display usage message
     else:
         argument_utilities.Usage()
