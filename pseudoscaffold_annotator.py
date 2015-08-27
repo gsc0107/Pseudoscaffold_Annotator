@@ -42,9 +42,9 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     #   Set up a list of arguments
     ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath), itertools.repeat(find_gff), itertools.repeat(find_bed), itertools.repeat(create_gff), itertools.repeat(create_bed))
     #   Annotate the pseudoscaffold in parallel
-        if __name__ == '__main__':
-            pool = Pool(processes=args['procs'])
-            pool.map( wrapper.args_wrapper, ann_args)
+    if __name__ == '__main__':
+        pool = Pool(processes=args['procs'])
+        pool.map( wrapper.args_wrapper, ann_args)
 
 
 #   Do the work here
