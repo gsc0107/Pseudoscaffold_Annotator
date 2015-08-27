@@ -7,6 +7,23 @@ import re
 import sys
 
 
+#       Find the seqid (column 1) from the GFF or BED file
+def contig_extracter(annotation):
+    """Extract the contig IDs from the original annotation file. Also provides one last check to make sure all information was transfered from original annotation file to annotation file for pseudoscaffold"""
+    contig = re.compile(ur'(^[a-zA-Z0-9_]+)', re.MULTILINE)
+    contig_original = list()
+    extracted_contig = contig.findall(annotation)
+    length_checker = len(extracted_contig)
+    for entry in extracted_contig:
+        if not entry in contig_original:
+            contig_original.append(entry)
+        else:
+            pass
+    print("Original contigs found")
+    print("There are " + str(len(contig_original)) + " contigs to work with")
+    return(contig_original, length_checker)
+
+
 #      Extract the sequences defined by the original annotation file
 def sequence_finder(seq_list, unique):
     """Find the sequences pertaining to the unique contig"""
