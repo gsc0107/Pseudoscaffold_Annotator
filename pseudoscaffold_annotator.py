@@ -50,9 +50,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
         for unique in contig_original:
             out.append(str(unique + '_out.gff'))
         #   Set up a list of arguments
-        # ann_args = zip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath))
-        # itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath))
-        ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath))
+        ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath))
         if __name__ == '__main__':
             pool = Pool(processes=args['procs'])
             pool.map(gff_to_gff.gffGFF, ann_args)
@@ -60,13 +58,11 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
         print "Found GFF file, making BED file"
         import GFF_Utilities.gff_to_bed as gff_to_bed
         import GFF_Utilities.gff_extracter as gff_extracter
-        contig_original, length_checker = gff_extracter.contig_extracter(reference, annotation)
-        if __name__ == '__main__':
-            lock = Lock()
-            for unique in contig_original:
-                out = str(unique+"_out.bed")
-                pass
-        pass
+        contig_original, length_final = gff_extracter.contig_extracter(annotation)
+        for unique in contig_original:
+            out = str(unique + '_out.bed')
+            bed_annotate = gff_to_bed.gffBED(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
+            bed_annotate.gff_to_bed()
     elif find_bed and create_gff:
         print "Found BED file, making GFF file"
         import BED_Utilities.bed_to_gff as bed_to_gff
