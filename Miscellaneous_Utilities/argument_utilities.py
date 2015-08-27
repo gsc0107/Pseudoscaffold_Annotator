@@ -98,8 +98,8 @@ def set_args():
         dest='cfile',
         default=rootpath+'/blast_config',
         metavar='BLAST CONFIG FILE',
-        help="Full path the BLAST configuration file. ")
-    Annotate_Arguments.add_argument('-t',
+        help="Full path the BLAST configuration file.")
+    Annotate_Arguments.add_argument('-t',
         '--threads',
         dest='procs',
         type=int,
