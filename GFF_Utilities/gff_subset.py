@@ -7,12 +7,12 @@ import re
 import random
 
 #   Import other modules from this software package
-import gff_extracter
+import Pseudoscaffold_Utilitites.pseudoscaffold_tools as pseudoscaffold_tools
 
 
 def gff_subset(annotation, desired_subset, out_gff):
     """Create a GFF file that's a subset of a larger GFF file"""
-    contig_original, length_final = gff_extracter.contig_extracter(annotation)
+    contig_original, length_final = pseudoscaffold_tools.contig_extracter(annotation)
     # contig_original, length_final = contig_extracter(annotation)
     print("Selecting samples for the subset")
     contig_subset = random.sample(contig_original, desired_subset)
