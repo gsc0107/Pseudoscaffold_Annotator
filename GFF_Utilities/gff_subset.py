@@ -7,7 +7,7 @@ import re
 import random
 
 #   Import other modules from this software package
-import Pseudoscaffold_Utilitites.pseudoscaffold_tools as pseudoscaffold_tools
+import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
 
 
 def gff_subset(annotation, desired_subset, out_gff):
