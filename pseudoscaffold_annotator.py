@@ -20,10 +20,8 @@ bed = re.compile(ur'(.*\.bed$)')
 #       Method dependent on the input and output annotation files
 def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     """Start annotating the pseudoscaffold"""
-    #   Import from the multiprocessing module
-    from multiprocessing import Pool
-    #   Import the itertools module for argument passing
-    import itertools
+    #   Import the parallelized wrapper
+    import Miscellaneous_Utilities.wrapper as wrapper
     #   Change to temp directory
     if not os.getcwd() == temppath:
         os.chdir(temppath)
@@ -39,40 +37,14 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     bconf = blast_utilities.blast_config_parser(args['cfile'])
     #   Make the BLAST databae
     database_name, out, err = blast_utilities.make_blast_database(bconf, shellpath, args['pseudoscaffold'], pseudopath, temppath)
-    #   Annotate the pseudoscaffold given an input and output annotation format
-    if find_gff and create_gff:
-        print "Found GFF file, making GFF file"
-        import GFF_Utilities.gff_to_gff as gff_to_gff
-        import GFF_Utilities.gff_extracter as gff_extracter
-        contig_original, length_final = gff_extracter.contig_extracter(annotation)
-        #   Set up a list to hold outfile names
-        out = list()
-        for unique in contig_original:
-            out.append(str(unique + '_out.gff'))
-        #   Set up a list of arguments
-        ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath))
+    #   Find the original contigs from the reference annotation
+    contig_original, length_final = pseudoscaffold_tools.contig_extracter(annotation)
+    #   Set up a list of arguments
+    ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath), itertools.repeat(find_gff), itertools.repeat(find_bed), itertools.repeat(create_gff), itertools.repeat(create_bed))
+    #   Annotate the pseudoscaffold in parallel
         if __name__ == '__main__':
             pool = Pool(processes=args['procs'])
-            pool.map(gff_to_gff.gffGFF, ann_args)
-    elif find_gff and create_bed:
-        print "Found GFF file, making BED file"
-        import GFF_Utilities.gff_to_bed as gff_to_bed
-        import GFF_Utilities.gff_extracter as gff_extracter
-        contig_original, length_final = gff_extracter.contig_extracter(annotation)
-        for unique in contig_original:
-            out = str(unique + '_out.bed')
-            bed_annotate = gff_to_bed.gffBED(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
-            bed_annotate.gff_to_bed()
-    elif find_bed and create_gff:
-        print "Found BED file, making GFF file"
-        import BED_Utilities.bed_to_gff as bed_to_gff
-        pass
-    elif find_bed and create_bed:
-        print "Found BED file, making BED file"
-        import BED_Utilities.bed_to_bed as bed_to_bed
-        pass
-    else:
-        sys.exit("Could determine neither file format of input nor desired format of output file. Please make sure extensions are typed out fully.")
+            pool.map( wrapper.args_wrapper, ann_args)
 
 
 #   Do the work here
