@@ -99,6 +99,13 @@ def set_args():
         default=rootpath+'/blast_config',
         metavar='BLAST CONFIG FILE',
         help="Full path the BLAST configuration file. ")
+    Annotate_Arguments.add_argument('-t',
+        '--threads',
+        dest='procs',
+        type=int,
+        default=2,
+        metavar='NUMBER OF PROCESSES',
+        help="How many processes are we starting to run in parallel?")
     #   Add parser for the subsetter
     Subset_Arguments = Sub_Args.add_parser('subset', help='Subset an annotation file randomly')
     Subset_Arguments.add_argument('-a',

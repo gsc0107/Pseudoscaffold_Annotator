@@ -15,9 +15,6 @@ import Miscellaneous_Utilities.blast_utilities as blast_utilities
 gff = re.compile(ur'(.*\.gff$)')
 bed = re.compile(ur'(.*\.bed$)')
 
-def wrapper(args):
-    print args
-    return
 
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
@@ -53,15 +50,12 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
         for unique in contig_original:
             out.append(str(unique + '_out.gff'))
         #   Set up a list of arguments
-        #ann_args = zip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath))
+        # ann_args = zip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath))
+        # itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath))
         ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, out, itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath))
-        # if __name__ == '__main__':
-        #     pool = Pool()
-        #     #pool.map(gff_to_gff.gff_to_gff, args)
-        #     pool.map(wrapper, ann_args)
-        print contig_original
-        print out
-        print ann_args
+        if __name__ == '__main__':
+            pool = Pool(processes=args['procs'])
+            pool.map(gff_to_gff.gffGFF, ann_args)
     elif find_gff and create_bed:
         print "Found GFF file, making BED file"
         import GFF_Utilities.gff_to_bed as gff_to_bed

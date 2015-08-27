@@ -70,3 +70,8 @@ def gff_to_gff(seq_list, unique, annotation, pseudoscaffold, outfile, temppath, 
     titles, starts, ends = blast_utilities.run_blast(bconf, unique_sequences, database_name, length_checker, temppath, pseudopath, unique, types)
     gff3_builder(titles, sources, types, starts, ends, scores, strands, phases, attributes, length_checker, outfile)
     return
+
+
+#   Define a function that can split the arguments
+def gffGFF(args):
+    return(gff_to_gff(*args))
