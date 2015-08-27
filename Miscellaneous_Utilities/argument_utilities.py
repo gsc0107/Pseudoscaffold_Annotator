@@ -99,6 +99,36 @@ def set_args():
         default=rootpath+'/blast_config',
         metavar='BLAST CONFIG FILE',
         help="Full path the BLAST configuration file. ")
+    Annotate_Arguments.add_argument('-t',
+        '--threads',
+        dest='procs',
+        type=int,
+        default=2,
+        metavar='NUMBER OF PROCESSES',
+        help="How many processes are we starting to run in parallel?")
+    #   Add parser for the subsetter
+    Subset_Arguments = Sub_Args.add_parser('subset', help='Subset an annotation file randomly')
+    Subset_Arguments.add_argument('-a',
+        '--annotation',
+        type=str,
+        dest='annotation',
+        default=None,
+        metavar='ANNOTATION',
+        help="Annotation file for subsetting")
+    Subset_Arguments.add_argument('-d',
+        '--desired-subset',
+        type=int,
+        dest='desired',
+        default=None,
+        metavar='DESIRED SUBSET',
+        help='Number of contigs to subset out')
+    Subset_Arguments.add_argument('-o',
+        '--out',
+        type=str,
+        dest='out',
+        default='subsetAnnotations',
+        metavar='OUTFILE',
+        help="Desired name, WITHOUT the extension, of the subsetted annotation file. The extension will be added automatcially based off of the input annotaiton file. Defaults to 'subsetAnnotations'")
     #   Parse the arguments
     args = Arguments.parse_args()
     return(args)
@@ -112,6 +142,7 @@ where: <subroutine> is one of
         fix
         blast-config
         annotate
+        subset
 
 The 'annotate' subroutine creates a GFF annotation file
 for an assembled pseudoscaffold fasta file based off a
@@ -126,6 +157,10 @@ Please do this before running pseudoscaffold_annotator.py
 To configure the parameters for the BLAST search,
 use the 'blast-config' subroutine to generate a new
 configuration file to be used by pseudoscaffold_annotator.py
+
+The 'subset' subroutine creates a random subset of an
+annotation file. Currently, this subroutine only supports
+GFF annotation files.
 
 ***IMPORTANT***
 pseudoscaffold_annotator.py requires no new lines
