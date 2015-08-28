@@ -4,6 +4,8 @@
 import os
 import sys
 import re
+import itertools
+from multiprocessing import Pool
 
 #   Import functions defined in another script bundled with this package
 import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
