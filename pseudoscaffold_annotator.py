@@ -21,7 +21,7 @@ bed = re.compile(ur'(.*\.bed$)')
 def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     """Start annotating the pseudoscaffold"""
     #   Import the parallelized wrapper
-    import Miscellaneous_Utilities.wrapper as wrapper
+    import Pseudoscaffold_Utilities.wrapper as wrapper
     #   Change to temp directory
     if not os.getcwd() == temppath:
         os.chdir(temppath)
