@@ -25,6 +25,7 @@ def gff_subset(annotation, desired_subset, out_gff):
         while True:
             try:
                 out.write(str(contig_matches.next().group()))
+		out.write("\n")
             except StopIteration:
                 break
     out.close()
