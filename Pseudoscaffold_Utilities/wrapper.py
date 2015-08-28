@@ -50,8 +50,8 @@ def parallelized_wrapper(seq_list, unique, annotation, pseudoscaffold, reference
 #   Split the arguments
 def args_wrapper(args):
     """Split the arguments"""
-    # return(parallelized_wrapper(*args))
-    return(test_wrapper(*args))
+    return(parallelized_wrapper(*args))
+    # return(test_wrapper(*args))
 
 
 
