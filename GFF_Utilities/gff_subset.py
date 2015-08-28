@@ -28,13 +28,3 @@ def gff_subset(annotation, desired_subset, out_gff):
             except StopIteration:
                 break
     out.close()
-
-
-# for contig in contig_subset:
-#     contig_finder = re.compile(ur'(%s\t.*)'%(contig))
-#     contig_matches = contig_finder.finditer(annotation)
-#     while True:
-#         try:
-#             print(str(contig_matches.next().group()))
-#         except StopIteration:
-#             break
