@@ -11,9 +11,9 @@ import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
 
 
 #   Determine how to annotate the pseudoscaffold and do so
-def parallelized_wrapper(seq_list, unique, annotation, pseudoscaffold, temppath, bconf, database_name, pseudopath, find_gff, find_bed, create_gff, create_bed):
+def parallelized_wrapper(seq_list, unique, annotation, pseudoscaffold, reference, temppath, bconf, database_name, pseudopath, find_gff, find_bed, create_gff, create_bed):
     """Annotate the pseudoscaffold"""
-    annotation, pseudoscaffold = annotation_utilities.opener(args['annotation'], args['pseudoscaffold'])
+    annotation, reference, pseudoscaffold = annotation_utilities.opener(args['annotation'], args['reference'], args['pseudoscaffold'])
     if find_gff and create_gff:
         print "Found GFF file, making GFF file"
         import GFF_Utilities.gff_to_gff as gff_to_gff
@@ -46,7 +46,7 @@ def args_wrapper(args):
 
 
 
-def test_wrapper(seq_list, unique, annotation, pseudoscaffold, temppath, bconf, database_name, pseudopath, find_gff, find_bed, create_gff, create_bed):
+def test_wrapper(seq_list, unique, annotation, pseudoscaffold, reference, temppath, bconf, database_name, pseudopath, find_gff, find_bed, create_gff, create_bed):
     print seq_list
     print unique
     print temppath

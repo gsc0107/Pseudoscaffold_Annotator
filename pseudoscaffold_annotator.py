@@ -42,7 +42,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     #   Find the original contigs from the reference annotation
     contig_original, length_final = pseudoscaffold_tools.contig_extracter(annotation)
     #   Set up a list of arguments
-    ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(args['annotation']), itertools.repeat(args['pseudoscaffold']), itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath), itertools.repeat(find_gff), itertools.repeat(find_bed), itertools.repeat(create_gff), itertools.repeat(create_bed))
+    ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(args['annotation']), itertools.repeat(args['pseudoscaffold']), itertools.repeat(args['reference']), itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath), itertools.repeat(find_gff), itertools.repeat(find_bed), itertools.repeat(create_gff), itertools.repeat(create_bed))
     #   Annotate the pseudoscaffold in parallel
     if __name__ == '__main__':
         pool = Pool(processes=args['procs'])
