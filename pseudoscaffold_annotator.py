@@ -29,8 +29,8 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
         os.chdir(temppath)
     #   Create full sequence list
     seq_list = annotation_utilities.extraction_sh(args['reference'], args['annotation'], shellpath)
-    #   Read the annotation, reference, and pseudoscaffold files
-    annotation, reference, pseudoscaffold = annotation_utilities.opener(args['annotation'], args['reference'], args['pseudoscaffold'])
+    # #   Read the annotation, reference, and pseudoscaffold files
+    # annotation, reference, pseudoscaffold = annotation_utilities.opener(args['annotation'], args['reference'], args['pseudoscaffold'])
     #   Figure out what reference annotation file we have
     find_gff, find_bed = annotation_utilities.extension_searcher(gff, bed, args['annotation'])
     #   Figure out what pseudoscaffold annotation file we are making
@@ -42,16 +42,11 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     #   Find the original contigs from the reference annotation
     contig_original, length_final = pseudoscaffold_tools.contig_extracter(annotation)
     #   Set up a list of arguments
-    ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(annotation), itertools.repeat(pseudoscaffold), itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath), itertools.repeat(find_gff), itertools.repeat(find_bed), itertools.repeat(create_gff), itertools.repeat(create_bed))
+    ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(args['annotation']), itertools.repeat(args['pseudoscaffold']), itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath), itertools.repeat(find_gff), itertools.repeat(find_bed), itertools.repeat(create_gff), itertools.repeat(create_bed))
     #   Annotate the pseudoscaffold in parallel
     if __name__ == '__main__':
         pool = Pool(processes=args['procs'])
-        iterator = pool.imap(wrapper.args_wrapper, ann_args)
-        while True:
-            try:
-                iterator.next()
-            except StopIteration:
-                break
+        pool.map(wrapper.args_wrapper, ann_args)
 
 
 #   Do the work here
