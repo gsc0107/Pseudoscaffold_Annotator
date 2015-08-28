@@ -3,6 +3,7 @@
 #   Import required modules from standard Python library
 import os
 import sys
+import re
 import itertools
 from multiprocessing import Pool
 
