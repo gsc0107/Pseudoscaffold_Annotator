@@ -8,8 +8,9 @@ import sys
 
 
 #       Find the seqid (column 1) from the GFF or BED file
-def contig_extracter(annotation):
+def contig_extracter(ann):
     """Extract the contig IDs from the original annotation file. Also provides one last check to make sure all information was transfered from original annotation file to annotation file for pseudoscaffold"""
+    annotation = open(ann).read()
     contig = re.compile(ur'(^[a-zA-Z0-9_]+)', re.MULTILINE)
     contig_original = list()
     extracted_contig = contig.findall(annotation)
