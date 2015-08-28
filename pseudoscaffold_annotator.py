@@ -31,6 +31,7 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     seq_list = annotation_utilities.extraction_sh(args['reference'], args['annotation'], shellpath)
     # #   Read the annotation, reference, and pseudoscaffold files
     # annotation, reference, pseudoscaffold = annotation_utilities.opener(args['annotation'], args['reference'], args['pseudoscaffold'])
+    annotation = annotation_utilities.opener(args['annotation'])
     #   Figure out what reference annotation file we have
     find_gff, find_bed = annotation_utilities.extension_searcher(gff, bed, args['annotation'])
     #   Figure out what pseudoscaffold annotation file we are making
