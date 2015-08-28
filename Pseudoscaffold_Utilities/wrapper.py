@@ -9,6 +9,10 @@ from multiprocessing import Pool
 #   Import functions defined in another script bundled with this package
 import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
 
+#   Create two regex objects for determining given and desired file extensions
+gff = re.compile(ur'(.*\.gff$)')
+bed = re.compile(ur'(.*\.bed$)')
+
 
 #   Determine how to annotate the pseudoscaffold and do so
 def parallelized_wrapper(seq_list, unique, annotation, pseudoscaffold, reference, temppath, bconf, database_name, pseudopath, args):

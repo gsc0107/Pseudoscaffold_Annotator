@@ -13,10 +13,6 @@ import Miscellaneous_Utilities.argument_utilities as argument_utilities
 import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
 import Miscellaneous_Utilities.blast_utilities as blast_utilities
 
-#   Create two regex objects for determining given and desired file extensions
-gff = re.compile(ur'(.*\.gff$)')
-bed = re.compile(ur'(.*\.bed$)')
-
 
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
