@@ -37,4 +37,16 @@ def parallelized_wrapper(seq_list, unique, annotation, pseudoscaffold, temppath,
 #   Split the arguments
 def args_wrapper(args):
     """Split the arguments"""
-    return(parallelized_wrapper(*args))
+    # return(parallelized_wrapper(*args))
+    return(test_wrapper(*args))
+
+
+
+def test_wrapper(seq_list, unique, annotation, pseudoscaffold, temppath, bconf, database_name, pseudopath, find_gff, find_bed, create_gff, create_bed):
+    print seq_list
+    print unique
+    print temppath
+    print bconf
+    print database_name
+    print pseudopath
+    return
