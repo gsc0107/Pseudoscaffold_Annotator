@@ -11,7 +11,11 @@ import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
 
 
 #   Determine how to annotate the pseudoscaffold and do so
-def parallelized_wrapper(seq_list, unique, annotation, pseudoscaffold, reference, temppath, bconf, database_name, pseudopath, find_gff, find_bed, create_gff, create_bed):
+def parallelized_wrapper(seq_list, unique, annotation, pseudoscaffold, reference, temppath, bconf, database_name, pseudopath, args):
+    #   Figure out what reference annotation file we have
+    find_gff, find_bed = annotation_utilities.extension_searcher(gff, bed, args['annotation'])
+    #   Figure out what pseudoscaffold annotation file we are making
+    create_gff, create_bed = annotation_utilities.extension_creator(gff, bed, args['outfile'])
     """Annotate the pseudoscaffold"""
     annotation, reference, pseudoscaffold = annotation_utilities.opener(args['annotation'], args['reference'], args['pseudoscaffold'])
     if find_gff and create_gff:
@@ -46,11 +50,12 @@ def args_wrapper(args):
 
 
 
-def test_wrapper(seq_list, unique, annotation, pseudoscaffold, reference, temppath, bconf, database_name, pseudopath, find_gff, find_bed, create_gff, create_bed):
+def test_wrapper(seq_list, unique, annotation, pseudoscaffold, reference, temppath, bconf, database_name, pseudopath, args):
     print seq_list
     print unique
     print temppath
     print bconf
     print database_name
     print pseudopath
+    print args
     return
