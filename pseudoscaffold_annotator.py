@@ -46,7 +46,12 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     #   Annotate the pseudoscaffold in parallel
     if __name__ == '__main__':
         pool = Pool(processes=args['procs'])
-        pool.map( wrapper.args_wrapper, ann_args)
+        iterator = pool.imap(wrapper.args_wrapper, ann_args)
+        while True:
+            try:
+                iterator.next()
+            except StopIteration:
+                break
 
 
 #   Do the work here
