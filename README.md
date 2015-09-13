@@ -3,6 +3,12 @@
 ___
 ___
 
+**If this program fails on you, revert back to a previous release using the commands**
+```shell
+git checkout -f
+git reset --hard 25543ca66a9a1a7cc1ab8dc72f4c6e237e797478
+```
+
 This is a program for annotating an assembled pseudoscaffold using a reference genome and annotation file. Currently, this only supports using GFF3 files as input, but can output both GFF3 files and 3-column BED files. Increased support for the BED format will come later.
 
 Running this program to annotate a pseudoscaffold is done using the following command:
