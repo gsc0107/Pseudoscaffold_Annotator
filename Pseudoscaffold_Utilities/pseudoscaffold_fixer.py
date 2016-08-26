@@ -17,7 +17,7 @@ def opener(pseudoscaffold, outfile):
 
 
 #   Get a list of all
-def contig_extracter(pseudo, num):
+def contig_extracter(pseudo):
     """Finds the pseudoscaffold IDs. These IDs must contain numbers, lowercase letters, or underscores only."""
     scaffolds = re.compile(ur'(>[0-9a-z\_]+)')
     pseudo_indecies = scaffolds.findall(pseudo)
