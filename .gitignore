@@ -1,6 +1,9 @@
-#	Byte-compiled files
+#   Byte-compiled files
 *.py[cod]
 
-#	Temp folder
+#   Temp folder
 temp/
 notes/
+
+#   Tags file (VSCode extension)
+tags
