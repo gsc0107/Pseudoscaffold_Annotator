@@ -3,7 +3,6 @@
 #   Import required modules from standard Python library
 import os
 import sys
-import re
 import itertools
 from multiprocessing import Pool
 
@@ -16,7 +15,7 @@ import Miscellaneous_Utilities.blast_utilities as blast_utilities
 
 #   Annotate the pseudoscaffold
 #       Method dependent on the input and output annotation files
-def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
+def pseudoscaffold_annotator(args, temppath, shellpath, pseudopath):
     """Start annotating the pseudoscaffold"""
     #   Import the parallelized wrapper
     import Pseudoscaffold_Utilities.wrapper as wrapper
@@ -39,7 +38,8 @@ def pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath):
     contig_original, length_final = pseudoscaffold_tools.contig_extracter(args['annotation'])
     #   Set up a list of arguments
     # ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(args['annotation']), itertools.repeat(args['pseudoscaffold']), itertools.repeat(args['reference']), itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath), itertools.repeat(find_gff), itertools.repeat(find_bed), itertools.repeat(create_gff), itertools.repeat(create_bed))
-    ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(args['annotation']), itertools.repeat(args['pseudoscaffold']), itertools.repeat(args['reference']), itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath), itertools.repeat(args['outfile']))
+    # ann_args = itertools.izip(itertools.repeat(seq_list), contig_original, itertools.repeat(args['annotation']), itertools.repeat(args['pseudoscaffold']), itertools.repeat(args['reference']), itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath), itertools.repeat(args['outfile']))
+    ann_args = zip(zip(itertools.repeat(seq_list), contig_original, itertools.repeat(args['annotation']), itertools.repeat(args['pseudoscaffold']), itertools.repeat(args['reference']), itertools.repeat(temppath), itertools.repeat(bconf), itertools.repeat(database_name), itertools.repeat(pseudopath), itertools.repeat(args['outfile'])))
     #   Annotate the pseudoscaffold in parallel
     if __name__ == '__main__':
         pool = Pool(processes=args['procs'])
@@ -67,12 +67,13 @@ def main():
     #   Run the 'annotate' subroutine
     elif args['command'] == 'annotate':
         rootpath, tempdir, temppath, shellpath, pseudopath = annotation_utilities.tempdir_creator(args['pseudoscaffold'])
-        pseudoscaffold_annotator(args, temppath, rootpath, shellpath, pseudopath)
+        pseudoscaffold_annotator(args, temppath, shellpath, pseudopath)
         #annotation_utilities.annotation_builder(rootpath, tempdir, temppath, args['outfile'])
     #   Run the 'subset' subroutine
     elif args['command'] == 'subset':
-        import Miscellaneous_Utilities.subset_annotation as subset_annotation
-        subset_annotation.subset_annotation(args, gff, bed)
+        pass
+        # import Miscellaneous_Utilities.subset_annotation as subset_annotation
+        # subset_annotation.subset_annotation(args, gff, bed)
     #   Incorrect subroutine specified, display usage message
     else:
         argument_utilities.Usage()
