@@ -11,8 +11,8 @@ from multiprocessing import Pool
 import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
 
 #   Create two regex objects for determining given and desired file extensions
-gff = re.compile(ur'(.*\.gff$)')
-bed = re.compile(ur'(.*\.bed$)')
+gff = re.compile(r'(.*\.gff$)')
+bed = re.compile(r'(.*\.bed$)')
 
 
 #   Determine how to annotate the pseudoscaffold and do so
@@ -24,24 +24,24 @@ def parallelized_wrapper(seq_list, unique, annotation, pseudoscaffold, reference
     """Annotate the pseudoscaffold"""
     annotation, reference, pseudoscaffold = annotation_utilities.opener(args['annotation'], args['reference'], args['pseudoscaffold'])
     if find_gff and create_gff:
-        print "Found GFF file, making GFF file"
+        print("Found GFF file, making GFF file")
         import GFF_Utilities.gff_to_gff as gff_to_gff
         out = str(unique + '_out.gff')
-        gff_annotate = gff_to_gff.gffGFF(eq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
+        gff_annotate = gff_to_gff.gffGFF(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
         gff_annotate.gff_to_gff()
     elif find_gff and create_bed:
-        print "Found GFF file, making BED file"
-        import GFF_Utilities.gff_to_bed as gff_to_bed
+        print("Found GFF file, making BED file")
+        from GFF_Utilities import gf
         out = str(unique + '_out.bed')
         bed_annotate = gff_to_bed.gffBED(seq_list, unique, reference, annotation, pseudoscaffold, out, temppath, bconf, database_name, pseudopath)
         bed_annotate.gff_to_bed()
     elif find_bed and create_gff:
-        print "Found BED file, making GFF file"
-        import BED_Utilities.bed_to_gff as bed_to_gff
+        print("Found BED file, making GFF file")
+        # import BED_Utilites
         pass
     elif find_bed and create_bed:
-        print "Found BED file, making BED file"
-        import BED_Utilities.bed_to_bed as bed_to_bed
+        print("Found BED file, making BED file")
+        # import BED_Utilities.bed_to_bed as bed_to_bed
         pass
     else:
         sys.exit("Could determine neither file format of input nor desired format of output file. Please make sure extensions are typed out fully.")
@@ -56,11 +56,11 @@ def args_wrapper(args):
 
 
 def test_wrapper(seq_list, unique, annotation, pseudoscaffold, reference, temppath, bconf, database_name, pseudopath, args):
-    print seq_list
-    print unique
-    print temppath
-    print bconf
-    print database_name
-    print pseudopath
-    print args
+    print(seq_list)
+    print(unique)
+    print(temppath)
+    print(bconf)
+    print(database_name)
+    print(pseudopath)
+    print(args)
     return

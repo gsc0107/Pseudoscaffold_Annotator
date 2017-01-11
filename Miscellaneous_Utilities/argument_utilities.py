@@ -137,43 +137,44 @@ def set_args():
 #   Usage message
 def Usage():
     """Prints usage message"""
-    print'''Usage: ./pseudoscaffold_annotator.py <subroutine>
-where: <subroutine> is one of
-        fix
-        blast-config
-        annotate
-        subset
+    print("Potatoes")
+#     print'''Usage: ./pseudoscaffold_annotator.py <subroutine>
+# where: <subroutine> is one of
+#         fix
+#         blast-config
+#         annotate
+#         subset
 
-The 'annotate' subroutine creates a GFF annotation file
-for an assembled pseudoscaffold fasta file based off a
-reference fasta file and GFF annotation file for the
-reference fasta file. Support for the BED format
-will be included in a later release.
+# The 'annotate' subroutine creates a GFF annotation file
+# for an assembled pseudoscaffold fasta file based off a
+# reference fasta file and GFF annotation file for the
+# reference fasta file. Support for the BED format
+# will be included in a later release.
 
-This program requires bedtools, BioPython and NCBI's BLAST+
-excecutables to be installed andfound within the system path.
-Please do this before running pseudoscaffold_annotator.py
+# This program requires bedtools, BioPython and NCBI's BLAST+
+# excecutables to be installed andfound within the system path.
+# Please do this before running pseudoscaffold_annotator.py
 
-To configure the parameters for the BLAST search,
-use the 'blast-config' subroutine to generate a new
-configuration file to be used by pseudoscaffold_annotator.py
+# To configure the parameters for the BLAST search,
+# use the 'blast-config' subroutine to generate a new
+# configuration file to be used by pseudoscaffold_annotator.py
 
-The 'subset' subroutine creates a random subset of an
-annotation file. Currently, this subroutine only supports
-GFF annotation files.
+# The 'subset' subroutine creates a random subset of an
+# annotation file. Currently, this subroutine only supports
+# GFF annotation files.
 
-***IMPORTANT***
-pseudoscaffold_annotator.py requires no new lines
-within the sequence of the pseudoscaffold.
-The following is not an allowed sequence:
-        >pseudoscaffold
-        ACTGTCAG
-        GCTATCGA
+# ***IMPORTANT***
+# pseudoscaffold_annotator.py requires no new lines
+# within the sequence of the pseudoscaffold.
+# The following is not an allowed sequence:
+#         >pseudoscaffold
+#         ACTGTCAG
+#         GCTATCGA
 
-The 'fix' subroutine removes new lines
-between sequence data, creating a fasta
-file that reads like:
-        >pseudoscaffold
-        ACTGTCAGGCTATCGA
-'''
+# The 'fix' subroutine removes new lines
+# between sequence data, creating a fasta
+# file that reads like:
+#         >pseudoscaffold
+#         ACTGTCAGGCTATCGA
+# '''
     return

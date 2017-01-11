@@ -4,14 +4,14 @@
 
 #   Import required modules from standard Python library
 import re
-import sys
+# import sys
 
 
 #       Find the seqid (column 1) from the GFF or BED file
 def contig_extracter(ann):
     """Extract the contig IDs from the original annotation file. Also provides one last check to make sure all information was transfered from original annotation file to annotation file for pseudoscaffold"""
     annotation = open(ann).read()
-    contig = re.compile(ur'(^[a-zA-Z0-9_]+)', re.MULTILINE)
+    contig = re.compile(r'(^[a-zA-Z0-9_]+)', re.MULTILINE)
     contig_original = list()
     extracted_contig = contig.findall(annotation)
     length_checker = len(extracted_contig)
@@ -29,7 +29,7 @@ def contig_extracter(ann):
 def sequence_finder(seq_list, unique):
     """Find the sequences pertaining to the unique contig"""
     print("Searching for sequences unique to " + unique)
-    sequence = re.compile(ur'(>%s:.*\n[ACTGN]+)'%(unique))
+    sequence = re.compile(r'(>%s:.*\n[ACTGN]+)'%(unique))
     finder = sequence.findall(seq_list)
     specific_filename = str(unique+'_sequence.fasta')
     specific_sequences = open(specific_filename, 'w')
