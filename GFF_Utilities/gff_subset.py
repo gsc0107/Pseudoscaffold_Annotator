@@ -7,7 +7,7 @@ import re
 import random
 
 #   Import other modules from this software package
-import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
+from Pseudoscaffold_Utilities import pseudoscaffold_tools
 
 
 def gff_subset(annotation, desired_subset, out_gff):
@@ -20,7 +20,7 @@ def gff_subset(annotation, desired_subset, out_gff):
     out = open(out_gff, 'a')
     print("Opened " + out_gff + " for writing")
     for contig in contig_subset:
-        contig_finder = re.compile(ur'(%s\t.*)'%(contig))
+        contig_finder = re.compile(r'(%s\t.*)'%(contig))
         contig_matches = contig_finder.finditer(annotation)
         while True:
             try:

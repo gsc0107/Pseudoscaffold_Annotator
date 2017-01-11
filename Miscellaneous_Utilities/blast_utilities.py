@@ -17,7 +17,7 @@ except ImportError:
 #   Create BLAST config file
 def make_blast_config(args):
     """Create a BLAST configuration file using settings defined by the user"""
-    import ConfigParser
+    import configparser
     #   Get the name of the config file
     #       and remove from the dictionary
     #       of commands to be included in
@@ -38,7 +38,7 @@ def make_blast_config(args):
     #   Iterate through the dictionary
     args_iterations = args.iteritems()
     #   Setup the configuration parser
-    blast_config = ConfigParser.RawConfigParser()
+    blast_config = configparser.RawConfigParser()
     blast_config.add_section('BlastConfiguration')
     #   Iterate through the dictionary and add to the config parser
     try:
@@ -55,9 +55,9 @@ def make_blast_config(args):
 #   Read BLAST config file
 def blast_config_parser(config_file):
     """Read the BLAST configuration file and pass arguments to BLAST functions"""
-    import ConfigParser
+    import configparser
     #   Setup the configuration parser
-    blast_config = ConfigParser.ConfigParser()
+    blast_config = configparser.ConfigParser()
     #   Read the configuration file
     blast_config.read(config_file)
     #   Create a dictionary for config options
@@ -108,6 +108,7 @@ def make_blast_database(bconf, shellpath, pseudoscaffold, pseudopath, temppath):
     override = bconf['override']
     #   Do we make or not?
     makebool = find_database(database_name, override)
+    database_type = 'nucl'
     #   Yes
     if makebool:
         database_script = str(shellpath + '/make_blast_database.sh')
@@ -161,7 +162,7 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence, types):
     starts = list()
     ends = list()
     #   Define the regex object for searching through the BLAST XML document
-    find_info = re.compile(ur'<Iteration>\s{3}<Iteration_iter-num>(\d*)</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>[\w\d:-]*</Iteration_query-def>\s{3}<Iteration_query-len>\d*</Iteration_query-len>\s{1}<Iteration_hits>\s{1}<Hit>[\w\W]*?<Hit_def>([\w\d]*)[\w\W]*?<Hsp_hit-from>([\d]*)[\w\W]*?<Hsp_hit-to>(\d*)')
+    find_info = re.compile(r'<Iteration>\s{3}<Iteration_iter-num>(\d*)</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>[\w\d:-]*</Iteration_query-def>\s{3}<Iteration_query-len>\d*</Iteration_query-len>\s{1}<Iteration_hits>\s{1}<Hit>[\w\W]*?<Hit_def>([\w\d]*)[\w\W]*?<Hsp_hit-from>([\d]*)[\w\W]*?<Hsp_hit-to>(\d*)')
     #   Find all information in the BLAST XML document
     blast_xml = open(blast_out).read()
     extracted_info = find_info.findall(blast_xml)
@@ -194,11 +195,11 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence, types):
         sequence = open(temppath + '/' + unique_sequence).read()
         for missing in missing_iters:
             for gene_part in gene_info:
-                query_searcher = re.compile(ur'<Iteration>\s{3}<Iteration_iter-num>%s</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>([\w\d:-]*)'%(str(missing)))
+                query_searcher = re.compile(r'<Iteration>\s{3}<Iteration_iter-num>%s</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>([\w\d:-]*)'%(str(missing)))
                 query = query_searcher.search(blast_xml).groups()[0]
                 #   Find the missing information from the original sequence file
                 #   The sequence for the missing query for checking
-                get_sequence = re.compile(ur'>%s\s([ACGTN]*)'%(query))
+                get_sequence = re.compile(r'>%s\s([ACGTN]*)'%(query))
                 q_seq = get_sequence.search(sequence).groups()[0]
                 print("Qseq: " + q_seq)
                 #   Start and end positions for this query
@@ -207,10 +208,10 @@ def blast_parser(blast_out, length_checker, temppath, unique_sequence, types):
                 q_end = query.split(':')[1].split('-')[1]
                 print("Qend: " + q_end)
                 #   Ensure the missing sequence exists within the gene sequence
-                gene_seq = re.search(ur'>%s\s([ACGTN]*)'%(gene_part[4]), sequence).groups()[0]
+                gene_seq = re.search(r'>%s\s([ACGTN]*)'%(gene_part[4]), sequence).groups()[0]
                 print("Gene sequence: " + gene_seq)
-                print gene_part[5]
-                print gene_part[6]
+                print(gene_part[5])
+                print(gene_part[6])
                 tstart = int(q_start) - int(gene_part[5])
                 tend = int(q_end) - int(gene_part[6])
                 if tend == 0:
@@ -258,7 +259,7 @@ def gene_finder(types, extracted_info, blast_xml):
                     extracted_index = extracted_info.index(hit)
                     break
             gene_part = list(extracted_info[extracted_index])
-            gene_def = re.search(ur'<Iteration>\s{3}<Iteration_iter-num>%s</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>([\w\d:-]*)'%(str(fixed_index)), blast_xml).groups()[0]
+            gene_def = re.search(r'<Iteration>\s{3}<Iteration_iter-num>%s</Iteration_iter-num>\s{3}<Iteration_query-ID>\w*</Iteration_query-ID>\s{3}<Iteration_query-def>([\w\d:-]*)'%(str(fixed_index)), blast_xml).groups()[0]
             gene_part.append(gene_def)
             #Get the definintion start and ends of the gene
             gene_part = gene_part + gene_part[4].split(':')[1].split('-')

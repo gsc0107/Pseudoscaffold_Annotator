@@ -7,7 +7,8 @@ import sys
 import os
 
 #   Import modules bundled with this software package
-import annotation_utilities
+# import annotation_utilities
+from . import annotation_utilities
 
 def subset_annotation(args, gff, bed):
     """Create a subset of an annotation file"""

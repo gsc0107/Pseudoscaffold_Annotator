@@ -7,9 +7,9 @@ import re
 import os
 
 #   Import functions defined in another script bundled with this package
-import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
-import Miscellaneous_Utilities.blast_utilities as blast_utilities
-import gff_extracter
+from Pseudoscaffold_Utilities import pseudoscaffold_tools
+from Miscellaneous_Utilities import blast_utilities
+from . import gff_extracter
 
 
 #   A class to handle making creating a GFF annotation while extracting information from a reference GFF annotation
@@ -33,7 +33,7 @@ class gffGFF(object):
         """Creates a check for each part of the extraction process to ensure the correct amount of data is gathered from the original annotation file.
             The unique argument is the contig to search for within the annotation file.
             The annotation argument is the original annotation file"""
-        contig = re.compile(ur'(%s)\t'%(self.unique))
+        contig = re.compile(r'(%s)\t'%(self.unique))
         length = contig.findall(self.annotation)
         length_checker = len(length)
         print("There should be " + str(length_checker) + " sequences")
