@@ -7,3 +7,6 @@ notes/
 
 #   Tags file (VSCode extension)
 tags
+
+#   Ignore the VSCode directory
+.vscode/
