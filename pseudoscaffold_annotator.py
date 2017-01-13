@@ -3,14 +3,32 @@
 #   Import required modules from standard Python library
 import os
 import sys
+import argparse
 import itertools
 from multiprocessing import Pool
 
 #   Import functions defined in another script bundled with this package
 import Pseudoscaffold_Utilities.pseudoscaffold_tools as pseudoscaffold_tools
-import Miscellaneous_Utilities.argument_utilities as argument_utilities
+# import Miscellaneous_Utilities.argument_utilities as argument_utilities
 import Miscellaneous_Utilities.annotation_utilities as annotation_utilities
-import Miscellaneous_Utilities.blast_utilities as blast_utilities
+# import Miscellaneous_Utilities.blast_utilities as blast_utilities
+
+
+# @typechecked
+def _set_args() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        add_help=True,
+        # formatter_class=argparse.RawTextHelpFormatter,
+        prog=sys.argv[0]
+    )
+    subparsers = parser.add_subparsers(
+        title='Subroutine',
+        description='Choose a subroutine',
+        dest='method',
+        help="potatoes"
+    )
+    config = subparsers.add_parser('CONFIG')
+
 
 
 #   Annotate the pseudoscaffold
