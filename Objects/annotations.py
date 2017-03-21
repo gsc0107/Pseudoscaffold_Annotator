@@ -5,7 +5,13 @@ if sys.version_info.major is not 3 and sys.version_info.minor < 5:
     sys.exit("Please use Python 3.5 or higher for this module: " + __name__)
 
 
+import os
 from typing import Optional, TypeVar
+
+try:
+    from typeguard import typechecked
+except ImportError as error:
+    sys.exit("Please install " + error.name)
 
 PlusMinus = TypeVar('PlusMinus', '+', '-')
 ValidPhase = TypeVar('ValidPhase', 0, 1, 2)
@@ -58,3 +64,12 @@ class GTF(GFF):
         )
         self._feature = self._type
         self._frame = self._phase
+
+
+@typechecked
+def validate_annotation(annotation: str) -> str:
+    """Pass an annotation file and check that it's valid"""
+    try:
+        return ''
+    except FileNotFoundError:
+        sys.exit("Failed to find " + annotation)
